@@ -118,13 +118,13 @@ public class Tank extends WorldItem{
             this.setX(30);
         }
         if (this.getX() >= World.SCREEN_WIDTH - 88) {
-            this.setX(World.getScreenWidth());
+            this.setX(World.getScreenWidth() - 88);
         }
         if(this.getY() < 40){
             this.setY(40);
         }
-        if(this.getY() >= World.SCREEN_WIDTH - 80){
-            this.setY(World.getScreenHeight());
+        if(this.getY() >= World.SCREEN_HEIGHT - 80){
+            this.setY(World.getScreenHeight() - 80);
         }
     }
     public void checkScreenEdge(){
@@ -184,5 +184,10 @@ public class Tank extends WorldItem{
         Graphics2D g2d = (Graphics2D) g;
 
         g2d.drawImage(getImg(), rotation, null);
+    }
+
+    @Override
+    public void drawImage(Graphics g, int x, int y) {
+
     }
 }
