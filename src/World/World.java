@@ -1,6 +1,5 @@
 package World;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -12,12 +11,15 @@ import static javax.imageio.ImageIO.read;
 
 public class World extends JPanel {
 
-    public static final int SCREEN_WIDTH = 1280;
-    public static final int SCREEN_HEIGHT = 960;
+    public static final int SCREEN_WIDTH = 4000;
+    public static final int SCREEN_HEIGHT = 4000;
+    public static final int SPLITSCREEN_WIDTH = 900;
+    public static final int SPLITSCREEN_HEIGHT = 700;
     private BufferedImage world;
     private Graphics2D buffer;
     private JFrame jf;
     private Tank tank1;
+    private Tank tank2;
     private Map m = null;
 
 
@@ -29,14 +31,15 @@ public class World extends JPanel {
 
             while (true) {
 
-                if (w.tank1.update()) {
+                if (w.tank1.update() && w.tank2.update()) {
                     w.repaint();
                     dl++;
-                    System.out.println(dl);
+//                    System.out.println(dl);
+//                    System.out.println(w.tank1);
                 }
                // w.repaint();
 //                w.paintComponent(w.getGraphics());
-                //System.out.println(w.tank1);
+//                System.out.println(w.tank1);
 
                 Thread.sleep(1000 / 144);
             }
@@ -63,12 +66,14 @@ public class World extends JPanel {
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
-        tank1 = new Tank(200, 200, 0, 0, 0, t1img);
+        tank1 = new Tank(600, 660, 0, 0, 0, t1img);
+        tank2 = new Tank(800, 700, 0, 0, 180, t1img);
 
 
 
         UserInput tankInput1 = new UserInput(tank1, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_ENTER);
-        
+        UserInput tankInput2 = new UserInput(tank2, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_ENTER);
+
 
         this.jf.setLayout(new BorderLayout());
         // this.lpane.add(m);
@@ -80,8 +85,9 @@ public class World extends JPanel {
         this.jf.pack();
 
         this.jf.addKeyListener(tankInput1);
+        this.jf.addKeyListener(tankInput2);
 
-        this.jf.setSize(World.SCREEN_WIDTH, World.SCREEN_HEIGHT + 30);
+        this.jf.setSize(World.SPLITSCREEN_WIDTH, World.SPLITSCREEN_HEIGHT + 30);
         this.jf.setResizable(false);
         jf.setLocationRelativeTo(null);
 
@@ -101,8 +107,27 @@ public class World extends JPanel {
 
         this.m.drawImage(buffer);
         this.tank1.drawImage(buffer);
+        this.tank2.drawImage(buffer);
 
-        g2.drawImage(world, 0, 0, null);
+        System.out.println("tank1: " + tank1.getX() + " " + tank1.getY());
+        System.out.println("tank2: " + tank2.getX() + " " + tank2.getY());
+
+        this.tank1.checkForOtherTank(tank2);
+
+        BufferedImage left = world.getSubimage(tank1.getX() - SPLITSCREEN_WIDTH / 4, tank1.getY() - SPLITSCREEN_HEIGHT / 2, SPLITSCREEN_WIDTH / 2, SPLITSCREEN_HEIGHT);
+        BufferedImage right = world.getSubimage(tank2.getX() - SPLITSCREEN_WIDTH / 4, tank2.getY() - SPLITSCREEN_HEIGHT / 2, SPLITSCREEN_WIDTH / 2, SPLITSCREEN_HEIGHT);
+
+        g2.drawImage(left, 0, 0, null);
+        g2.drawImage(right, SPLITSCREEN_WIDTH / 2, 0, null);
+
+        //get the offset for tank placement on a split screen
+        //divide by 6 to get thirds of each segment
+        int tankScreenPlacementOffsetX = World.SCREEN_WIDTH / 6;
+        int tankScreenPlacementOffsetY = World.SCREEN_HEIGHT / 6;
+
+        g2.drawImage(world, SCREEN_WIDTH - tankScreenPlacementOffsetX, SCREEN_HEIGHT - tankScreenPlacementOffsetY, tankScreenPlacementOffsetX, tankScreenPlacementOffsetY, null);
+
+//         g2.drawImage(world, 0, 0, null);
     }
 
     public static int getScreenWidth() {

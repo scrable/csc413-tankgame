@@ -1,7 +1,5 @@
 package World;
 
-import World.World;
-
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -25,6 +23,8 @@ public class Tank extends WorldItem{
         this.setAy(vy);
         this.img = img;
         this.setA(angle);
+        //check border here to make sure the initial position is valid
+        checkBorder();
     }
 
 
@@ -110,18 +110,29 @@ public class Tank extends WorldItem{
     }
 
     private void checkBorder() {
-        if (this.getX() < 30) {
-            this.setX(30);
+        //minimum X
+        if (this.getX() < World.SPLITSCREEN_WIDTH / 4) {
+            this.setX(World.SPLITSCREEN_WIDTH / 4);
         }
-        if (this.getX() >= World.SCREEN_WIDTH - 88) {
-            this.setX(World.SCREEN_WIDTH - 88);
+        //maximum X
+        if (this.getX() > World.SCREEN_WIDTH - World.SPLITSCREEN_WIDTH / 4) {
+            this.setX(World.SCREEN_WIDTH - World.SPLITSCREEN_WIDTH / 4);
         }
-        if (this.getY() < 40) {
-            this.setY(40);
+        //minimum Y
+        if (this.getY() < World.SPLITSCREEN_HEIGHT / 2) {
+            this.setY(World.SPLITSCREEN_HEIGHT / 2);
         }
-        if (this.getY() >= World.SCREEN_HEIGHT - 80) {
-            this.setY(World.SCREEN_HEIGHT - 80);
+        //maximum Y
+        if (this.getY() > World.SCREEN_HEIGHT - World.SPLITSCREEN_HEIGHT / 2) {
+            this.setY(World.SCREEN_HEIGHT - World.SPLITSCREEN_HEIGHT / 2);
         }
+    }
+
+    public void checkForOtherTank(Tank t2){
+//        if(this.getX() + Math.cos(Math.toRadians(50)) == t2.getX() - Math.cos(Math.toRadians(50)))
+//        if(Math.abs(this.getX() - t2.getX()) == 40)
+//            System.out.println("HELLO1");
+
     }
 
     @Override
