@@ -11,7 +11,8 @@ public class Tank extends WorldItem{
 
     private final int R = 2;
     private final int ROTATIONSPEED = 4;
-    private Image img;
+    private int tx;
+    private int ty;
     private boolean UpPressed;
     private boolean DownPressed;
     private boolean RightPressed;
@@ -23,8 +24,9 @@ public class Tank extends WorldItem{
         this.setY(y);
         this.setAx(vx);
         this.setAy(vy);
-        this.img = ImageIO.read(new File(img));
+        this.setImg(ImageIO.read(new File(img)));
         this.setA(angle);
+
         //check border here to make sure the initial position is valid
         checkBorder();
     }
@@ -112,22 +114,55 @@ public class Tank extends WorldItem{
     }
 
     private void checkBorder() {
+        if(this.getX() < 30){
+            this.setX(30);
+        }
+        if (this.getX() >= World.SCREEN_WIDTH - 88) {
+            this.setX(World.getScreenWidth());
+        }
+        if(this.getY() < 40){
+            this.setY(40);
+        }
+        if(this.getY() >= World.SCREEN_WIDTH - 80){
+            this.setY(World.getScreenHeight());
+        }
+    }
+    public void checkScreenEdge(){
+        this.tx = this.getX();
+        this.ty = this.getY();
+
         //minimum X
         if (this.getX() < World.SPLITSCREEN_WIDTH / 4) {
-            this.setX(World.SPLITSCREEN_WIDTH / 4);
+            this.setTx(World.SPLITSCREEN_WIDTH / 4);
         }
         //maximum X
         if (this.getX() > World.SCREEN_WIDTH - World.SPLITSCREEN_WIDTH / 4) {
-            this.setX(World.SCREEN_WIDTH - World.SPLITSCREEN_WIDTH / 4);
+            this.setTx(World.SCREEN_WIDTH - World.SPLITSCREEN_WIDTH / 4);
         }
         //minimum Y
         if (this.getY() < World.SPLITSCREEN_HEIGHT / 2) {
-            this.setY(World.SPLITSCREEN_HEIGHT / 2);
+            this.setTy(World.SPLITSCREEN_HEIGHT / 2);
         }
         //maximum Y
         if (this.getY() > World.SCREEN_HEIGHT - World.SPLITSCREEN_HEIGHT / 2) {
-            this.setY(World.SCREEN_HEIGHT - World.SPLITSCREEN_HEIGHT / 2);
+            this.setTy(World.SCREEN_HEIGHT - World.SPLITSCREEN_HEIGHT / 2);
         }
+    }
+
+    public int getTx() {
+        return tx;
+    }
+
+    public void setTx(int tx) {
+        this.tx = tx;
+    }
+
+    public int getTy() {
+        return ty;
+    }
+
+    public void setTy(int ty) {
+        this.ty = ty;
     }
 
     public void checkForOtherTank(Tank t2){
@@ -143,12 +178,11 @@ public class Tank extends WorldItem{
     }
 
 
-    void drawImage(Graphics g) {
+    public void drawImage(Graphics g) {
         AffineTransform rotation = AffineTransform.getTranslateInstance(this.getX(), this.getY());
-        rotation.rotate(Math.toRadians(this.getA()), this.img.getWidth(null) / 2.0, this.img.getHeight(null) / 2.0);
+        rotation.rotate(Math.toRadians(this.getA()), this.getImg().getWidth(null) / 2.0, this.getImg().getHeight(null) / 2.0);
         Graphics2D g2d = (Graphics2D) g;
 
-
-        g2d.drawImage(this.img, rotation, null);
+        g2d.drawImage(getImg(), rotation, null);
     }
 }
