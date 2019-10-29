@@ -1,4 +1,4 @@
-package Project.Powerup;
+package World.Powerup;
 
 public class Powerup {
 }
