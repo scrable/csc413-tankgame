@@ -15,12 +15,14 @@ public class World extends JPanel {
     public static final int SCREEN_HEIGHT = 4000;
     public static final int SPLITSCREEN_WIDTH = 900;
     public static final int SPLITSCREEN_HEIGHT = 700;
+    private static Rectangle r;
     private BufferedImage world;
     private Graphics2D buffer;
     private JFrame jf;
     private Tank tank1;
     private Tank tank2;
     private Map m = null;
+
 
 
     public static void main(String[] args) {
@@ -32,7 +34,8 @@ public class World extends JPanel {
             while (true) {
 
                 if (w.tank1.update() && w.tank2.update()) {
-                    w.repaint();
+                   // w.repaint();
+                    w.repaint(r);
                     dl++;
 //                    System.out.println(dl);
 //                    System.out.println(w.tank1);
@@ -102,7 +105,7 @@ public class World extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-        buffer = world.createGraphics();
+        buffer = this.world.createGraphics();
         super.paintComponent(buffer);
 
         this.m.drawImage(buffer);
@@ -120,12 +123,10 @@ public class World extends JPanel {
         g2.drawImage(left, 0, 0, null);
         g2.drawImage(right, SPLITSCREEN_WIDTH / 2, 0, null);
 
-        //get the offset for tank placement on a split screen
-        //divide by 6 to get thirds of each segment
-        int tankScreenPlacementOffsetX = World.SCREEN_WIDTH / 6;
-        int tankScreenPlacementOffsetY = World.SCREEN_HEIGHT / 6;
+        r = g.getClipBounds();
+        System.out.println(r);
 
-        g2.drawImage(world, SCREEN_WIDTH - tankScreenPlacementOffsetX, SCREEN_HEIGHT - tankScreenPlacementOffsetY, tankScreenPlacementOffsetX, tankScreenPlacementOffsetY, null);
+
 
 //         g2.drawImage(world, 0, 0, null);
     }
