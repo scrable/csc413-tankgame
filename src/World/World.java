@@ -28,7 +28,6 @@ public class World extends JPanel {
     public static void main(String[] args) {
         World w = new World();
         w.init();
-        int dl = 0;
         try {
 
             while (true) {
@@ -36,7 +35,6 @@ public class World extends JPanel {
                 if (w.tank1.update() && w.tank2.update()) {
                    // w.repaint();
                     w.repaint(r);
-                    dl++;
 //                    System.out.println(dl);
 //                    System.out.println(w.tank1);
                 }
@@ -54,26 +52,26 @@ public class World extends JPanel {
         this.jf = new JFrame("Tank Rotation");
         this.world = new BufferedImage(World.SCREEN_WIDTH, World.SCREEN_HEIGHT, BufferedImage.TYPE_INT_RGB);
 
-        BufferedImage t1img = null, t2img = null;
-
         try {
             System.out.println(System.getProperty("user.dir"));
             /*
              * note class loaders read files from the out folder (build folder in netbeans) and not the
              * current working directory.
              */
-            t1img = read(new File("resources/Tank1.png"));
+
+            //load the tank images
+            tank1 = new Tank(600, 660, 0, 0, 0, "resources/Tank1.png");
+            tank2 = new Tank(800, 700, 0, 0, 180, "resources/Tank1.png");
+
+            //load the background
             m = new Map("resources/Background.bmp");
 
 
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
-        tank1 = new Tank(600, 660, 0, 0, 0, t1img);
-        tank2 = new Tank(800, 700, 0, 0, 180, t1img);
 
-
-
+        
         UserInput tankInput1 = new UserInput(tank1, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_ENTER);
         UserInput tankInput2 = new UserInput(tank2, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_ENTER);
 

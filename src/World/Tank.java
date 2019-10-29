@@ -1,27 +1,30 @@
 package World;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class Tank extends WorldItem{
 
 
     private final int R = 2;
     private final int ROTATIONSPEED = 4;
-    private BufferedImage img;
+    private Image img;
     private boolean UpPressed;
     private boolean DownPressed;
     private boolean RightPressed;
     private boolean LeftPressed;
 
 
-    Tank(int x, int y, int vx, int vy, int angle, BufferedImage img) {
+    Tank(int x, int y, int vx, int vy, int angle, String img) throws IOException {
         this.setX(x);
         this.setY(y);
         this.setAx(vx);
         this.setAy(vy);
-        this.img = img;
+        this.img = ImageIO.read(new File(img));
         this.setA(angle);
         //check border here to make sure the initial position is valid
         checkBorder();
@@ -143,7 +146,7 @@ public class Tank extends WorldItem{
 
     void drawImage(Graphics g) {
         AffineTransform rotation = AffineTransform.getTranslateInstance(this.getX(), this.getY());
-        rotation.rotate(Math.toRadians(this.getA()), this.img.getWidth() / 2.0, this.img.getHeight() / 2.0);
+        rotation.rotate(Math.toRadians(this.getA()), this.img.getWidth(null) / 2.0, this.img.getHeight(null) / 2.0);
         Graphics2D g2d = (Graphics2D) g;
 
 
