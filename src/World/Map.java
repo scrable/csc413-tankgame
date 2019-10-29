@@ -31,27 +31,37 @@ public class Map extends JPanel {
 //
 //    }
 
-void drawImage(Graphics g){
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(320, 240);
+    }
+
+    void drawImage(Graphics g) {
 //        paintComponent(g);
-       // g.drawImage(image, 0, 0, null);
+        // g.drawImage(image, 0, 0, null);
 
-    super.paintComponent(g);
+        //  super.paintComponent(g);
 
-    if (image != null) {
-
-        int imgWidth, imgHeight;
-
-
-        imgWidth = World.getScreenWidth();
-        imgHeight = World.getScreenHeight();
-        g.drawImage(image, 0, 0, imgWidth, imgHeight, this);
-    }
-    }
-
-//    @Override
-//    protected void paintComponent(Graphics g) {
-//        super.paintComponent(g);
-//            g.drawImage(image, x, y, imgWidth, imgHeight, this);
-//        }
+//    if (image != null) {
+//
+//        int imgWidth, imgHeight;
+//
+//
+//        imgWidth = World.getScreenWidth();
+//        imgHeight = World.getScreenHeight();
+//        g.drawImage(image, 0, 0, imgWidth, imgHeight, this);
 //    }
+
+        super.paintComponent(g);
+        int width = World.getScreenWidth();
+        int height = World.getScreenHeight();
+        int imageW = image.getWidth(this);
+        int imageH = image.getHeight(this);
+
+        for (int y = 0; y < width; y += imageH) {
+            for (int x = 0; x < height; x += imageW) {
+                g.drawImage(image, x, y, this);
+            }
+        }
+    }
 }
