@@ -1,6 +1,7 @@
 package World;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public abstract class WorldItem {
     private int a;
@@ -9,6 +10,8 @@ public abstract class WorldItem {
     private int ax;
     private int ay;
     private Image img;
+
+    //private static ArrayList<WorldItem> WorldItemArray = new ArrayList<WorldItem>();
 
     public Image getImg() {
         return img;
@@ -57,8 +60,16 @@ public abstract class WorldItem {
     public void setAy(int ay) {
         this.ay = ay;
     }
+
+//    public static ArrayList<WorldItem> getWorldItemArray() {
+//        return WorldItemArray;
+//    }
+//
+//    public static void setWorldItemArray(ArrayList<WorldItem> worldItemArray) {
+//        WorldItemArray = worldItemArray;
+//    }
     
     public abstract void drawImage(Graphics g, int x, int y);
 
-    public abstract void collisions(WorldItem item);
+    public abstract void collisions();
 }

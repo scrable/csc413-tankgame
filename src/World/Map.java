@@ -53,8 +53,8 @@ public class Map extends JPanel {
 //    }
 
         super.paintComponent(g);
-        int width = World.getScreenWidth();
-        int height = World.getScreenHeight();
+        int width = World.SCREEN_WIDTH;
+        int height = World.SCREEN_HEIGHT;
         int imageW = image.getWidth(this);
         int imageH = image.getHeight(this);
 

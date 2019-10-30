@@ -14,7 +14,7 @@ public class BreakableWall extends Wall {
     }
 
     @Override
-    public void collisions(WorldItem item) {
+    public void collisions() {
 
     }
 }

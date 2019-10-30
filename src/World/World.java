@@ -5,11 +5,12 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class World extends JPanel {
 
-    public static final int SCREEN_WIDTH = 4000;
-    public static final int SCREEN_HEIGHT = 4000;
+    public static final int SCREEN_WIDTH = 3200;
+    public static final int SCREEN_HEIGHT = 3200;
     public static final int SPLITSCREEN_WIDTH = 900;
     public static final int SPLITSCREEN_HEIGHT = 700;
     private static Rectangle r;
@@ -19,9 +20,18 @@ public class World extends JPanel {
     private Tank tank1;
     private Tank tank2;
     private Map m = null;
-    private UnbreakableWall[] wi;
+    private UnbreakableWall[] horizontalWalls;
     private UnbreakableWall ubw;
-    private UnbreakableWall[] middleWalls;
+
+    public static ArrayList<WorldItem> getA3() {
+        return a3;
+    }
+
+    public static void setA3(ArrayList<WorldItem> a) {
+        a3 = a;
+    }
+
+    private static ArrayList<WorldItem> a3 = new ArrayList<WorldItem>();
 
 
 
@@ -37,6 +47,9 @@ public class World extends JPanel {
                     w.repaint(r);
 //                    System.out.println(dl);
 //                    System.out.println(w.tank1);
+                    //a3.get(0).collisions();
+                    w.tank1.collisions();
+
                 }
                // w.repaint();
 //                w.paintComponent(w.getGraphics());
@@ -69,20 +82,29 @@ public class World extends JPanel {
             //load the wall
             ubw = new UnbreakableWall("resources/Wall1.gif");
             int counter = 0;
-            int numWallsHorizontal = World.getScreenWidth() / this.ubw.getImg().getWidth(null);
-            wi = new UnbreakableWall[numWallsHorizontal];
-            for(int i = 0; i < World.getScreenWidth(); i += this.ubw.getImg().getWidth(null)){
+            int numWallsHorizontal = SCREEN_WIDTH / this.ubw.getImg().getWidth(null);
+            horizontalWalls = new UnbreakableWall[numWallsHorizontal];
+            for(int i = 0; i < SCREEN_WIDTH; i += this.ubw.getImg().getWidth(null)){
                 UnbreakableWall tempubw = new UnbreakableWall("resources/Wall1.gif");
                 tempubw.setX(i);
-                wi[counter] = tempubw;
+                horizontalWalls[counter] = tempubw;
                 counter++;
             }
 
-            middleWalls = new UnbreakableWall[10];
-            middleWalls[0] = new UnbreakableWall("resources/Wall1.gif");
 
-            middleWalls[0].setX(100);
-            middleWalls[0].setY(100);
+
+//            middleWalls[0].setX(100);
+//            middleWalls[0].setY(100);
+
+           WorldItem f = new UnbreakableWall("resources/Wall1.gif");
+            f.setX(100);
+            f.setY(100);
+//           ArrayList<WorldItem> itemA = new ArrayList<WorldItem>();
+//           itemA.add(f);
+//
+//           WorldItem.setWorldItemArray(itemA);
+            //a3.add(tank1);
+            a3.add(f);
 
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
@@ -131,10 +153,10 @@ public class World extends JPanel {
 
 
 
-        System.out.println("tank1: " + tank1.getX() + " " + tank1.getY() + " " + tank1.getA());
-        System.out.println("tank2: " + tank2.getX() + " " + tank2.getY());
 
-        this.tank1.checkForOtherTank(tank2);
+//        System.out.println("tank1: " + tank1.getX() + " " + tank1.getY() + " " + tank1.getA());
+//        System.out.println("tank2: " + tank2.getX() + " " + tank2.getY());
+
 
         this.tank1.checkScreenEdge();
         this.tank2.checkScreenEdge();
@@ -142,32 +164,27 @@ public class World extends JPanel {
         BufferedImage left = world.getSubimage(tank1.getTx() - SPLITSCREEN_WIDTH / 4, tank1.getTy() - SPLITSCREEN_HEIGHT / 2, SPLITSCREEN_WIDTH / 2, SPLITSCREEN_HEIGHT);
         BufferedImage right = world.getSubimage(tank2.getTx() - SPLITSCREEN_WIDTH / 4, tank2.getTy() - SPLITSCREEN_HEIGHT / 2, SPLITSCREEN_WIDTH / 2, SPLITSCREEN_HEIGHT);
 
-        for(int i = 0; i < World.getScreenWidth(); i += this.ubw.getImg().getWidth(null)){
-           // this.ubw.drawImage(buffer, i, 0);
-            this.ubw.drawImage(buffer, i, SCREEN_HEIGHT-this.ubw.getImg().getHeight(null));
+        //draw the walls bordering the top and bottom of the world
+        //these don't need to be in the collision check since borderchecking is already done in tank class
+        for(int i = 0; i < SCREEN_WIDTH; i += this.ubw.getImg().getWidth(null)){
+            this.ubw.drawImage(buffer, i, SCREEN_HEIGHT- this.ubw.getImg().getHeight(null) - 4);
+            this.ubw.drawImage(buffer, i, 0);
         }
        // this.ubw.drawImage(buffer, 100, 100);
-        this.middleWalls[0].drawImage(buffer, this.middleWalls[0].getX(), this.middleWalls[0].getY());
+//        this.middleWalls[0].drawImage(buffer, this.middleWalls[0].getX(), this.middleWalls[0].getY());
+        for (WorldItem worldItem : a3) worldItem.drawImage(buffer, worldItem.getX(), worldItem.getY());
 
         g2.drawImage(left, 0, 0, null);
         g2.drawImage(right, SPLITSCREEN_WIDTH / 2, 0, null);
 
 
-        this.tank1.collisions(middleWalls[0]);
+//        this.tank1.collisions(middleWalls[0]);
 
         r = g.getClipBounds();
-        System.out.println(r);
+//        System.out.println(r);
 
 
 
 //         g2.drawImage(world, 0, 0, null);
-    }
-
-    public static int getScreenWidth() {
-        return SCREEN_WIDTH;
-    }
-
-    public static int getScreenHeight() {
-        return SCREEN_HEIGHT;
     }
 }

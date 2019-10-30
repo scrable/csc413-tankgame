@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Tank extends WorldItem{
 
@@ -118,14 +119,15 @@ public class Tank extends WorldItem{
             this.setX(30);
         }
         if (this.getX() >= World.SCREEN_WIDTH - 88) {
-            this.setX(World.getScreenWidth() - 88);
+            this.setX(World.SCREEN_WIDTH - 88);
         }
         if(this.getY() < 40){
             this.setY(40);
         }
         if(this.getY() >= World.SCREEN_HEIGHT - 80){
-            this.setY(World.getScreenHeight() - 80);
+            this.setY(World.SCREEN_HEIGHT - 80);
         }
+
     }
     public void checkScreenEdge(){
         this.tx = this.getX();
@@ -165,13 +167,6 @@ public class Tank extends WorldItem{
         this.ty = ty;
     }
 
-    public void checkForOtherTank(Tank t2){
-//        if(this.getX() + Math.cos(Math.toRadians(50)) == t2.getX() - Math.cos(Math.toRadians(50)))
-//        if(Math.abs(this.getX() - t2.getX()) == 40)
-//            System.out.println("HELLO1");
-
-    }
-
     @Override
     public String toString() {
         return "x=" + this.getX() + ", y=" + this.getY() + ", angle=" + this.getA();
@@ -192,15 +187,49 @@ public class Tank extends WorldItem{
     }
 
     @Override
-    public void collisions(WorldItem item){
+    public void collisions(){
+        ArrayList<WorldItem> itemA = World.getA3();
+
+        WorldItem item = itemA.get(0);
+
         Rectangle tankRectangle = new Rectangle(this.getX(), this.getY(), this.getImg().getWidth(null), this.getImg().getHeight(null));
         Rectangle itemRectangle = new Rectangle(item.getX(), item.getY(), item.getImg().getWidth(null), item.getImg().getHeight(null));
         if(tankRectangle.intersects(itemRectangle)){
+            Rectangle intersection = tankRectangle.intersection(itemRectangle);
             //coming from the bottom
-            if(this.getY() - this.getImg().getHeight(null)/2 < item.getY() + item.getImg().getHeight(null))
-                this.setY(this.getImg().getHeight(null)/2 + item.getY() + item.getImg().getHeight(null)/4);
-            else if(this.getY() + this.getImg().getHeight(null)/2 > item.getY() - item.getImg().getHeight(null))
-                this.setY(item.getY() - this.getImg().getHeight(null)/2 - item.getImg().getHeight(null));
+//            if(this.getY() - this.getImg().getHeight(null)/2 < item.getY() + item.getImg().getHeight(null)) {
+//                this.setY(this.getImg().getHeight(null) / 2 + item.getY() + item.getImg().getHeight(null) / 4);
+//                System.out.println("collision1");
+//            }
+//            else if(this.getY() + this.getImg().getHeight(null)/2 > item.getY()){
+//                this.setY(item.getY() - this.getImg().getHeight(null)/2 - item.getImg().getHeight(null));
+
+            System.out.println(intersection);
+
+            //from bottom into something
+            if(this.getY() > item.getY()){
+                //topleft
+                if(this.getX() < intersection.getX() + intersection.getWidth() && this.getX() > intersection.getWidth()) {
+                    System.out.println("HELLO");
+                    // else
+                    this.setY((int) intersection.getY() + (int) intersection.getHeight());
+                }
+            }
+            //from top into something
+//            if(this.getY() < item.getY()){
+////                if(this.getX() < intersection.getX())
+////                    ;
+////                else
+//                    this.setY((int) intersection.getY() -  this.getImg().getHeight(null));// - (int) intersection.getHeight());
+//            }
+//            //from right into something
+//            if(this.getX() > item.getX()){
+//                this.setX((int) intersection.getX() + (int) intersection.getWidth());
+//            }
+//            //from left into something
+//            if(this.getX() < item.getX()){
+//                this.setX((int) intersection.getX() -  this.getImg().getWidth(null));// - (int) intersection.getHeight());
+//            }
         }
     }
 }
