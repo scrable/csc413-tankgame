@@ -190,4 +190,17 @@ public class Tank extends WorldItem{
     public void drawImage(Graphics g, int x, int y) {
 
     }
+
+    @Override
+    public void collisions(WorldItem item){
+        Rectangle tankRectangle = new Rectangle(this.getX(), this.getY(), this.getImg().getWidth(null), this.getImg().getHeight(null));
+        Rectangle itemRectangle = new Rectangle(item.getX(), item.getY(), item.getImg().getWidth(null), item.getImg().getHeight(null));
+        if(tankRectangle.intersects(itemRectangle)){
+            //coming from the bottom
+            if(this.getY() - this.getImg().getHeight(null)/2 < item.getY() + item.getImg().getHeight(null))
+                this.setY(this.getImg().getHeight(null)/2 + item.getY() + item.getImg().getHeight(null)/4);
+            else if(this.getY() + this.getImg().getHeight(null)/2 > item.getY() - item.getImg().getHeight(null))
+                this.setY(item.getY() - this.getImg().getHeight(null)/2 - item.getImg().getHeight(null));
+        }
+    }
 }

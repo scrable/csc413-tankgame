@@ -1,11 +1,22 @@
 package World;
 
+import java.awt.*;
+
 public abstract class WorldItem {
     private int a;
     private int x;
     private int y;
     private int ax;
     private int ay;
+    private Image img;
+
+    public Image getImg() {
+        return img;
+    }
+
+    public void setImg(Image img) {
+        this.img = img;
+    }
 
     public int getA() {
         return a;
@@ -46,4 +57,8 @@ public abstract class WorldItem {
     public void setAy(int ay) {
         this.ay = ay;
     }
+    
+    public abstract void drawImage(Graphics g, int x, int y);
+
+    public abstract void collisions(WorldItem item);
 }

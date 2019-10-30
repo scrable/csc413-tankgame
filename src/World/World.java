@@ -19,6 +19,9 @@ public class World extends JPanel {
     private Tank tank1;
     private Tank tank2;
     private Map m = null;
+    private UnbreakableWall[] wi;
+    private UnbreakableWall ubw;
+    private UnbreakableWall[] middleWalls;
 
 
 
@@ -63,6 +66,23 @@ public class World extends JPanel {
             //load the background
             m = new Map("resources/Background.bmp");
 
+            //load the wall
+            ubw = new UnbreakableWall("resources/Wall1.gif");
+            int counter = 0;
+            int numWallsHorizontal = World.getScreenWidth() / this.ubw.getImg().getWidth(null);
+            wi = new UnbreakableWall[numWallsHorizontal];
+            for(int i = 0; i < World.getScreenWidth(); i += this.ubw.getImg().getWidth(null)){
+                UnbreakableWall tempubw = new UnbreakableWall("resources/Wall1.gif");
+                tempubw.setX(i);
+                wi[counter] = tempubw;
+                counter++;
+            }
+
+            middleWalls = new UnbreakableWall[10];
+            middleWalls[0] = new UnbreakableWall("resources/Wall1.gif");
+
+            middleWalls[0].setX(100);
+            middleWalls[0].setY(100);
 
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
@@ -101,22 +121,39 @@ public class World extends JPanel {
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         buffer = this.world.createGraphics();
-        super.paintComponent(buffer);
+        super.paintComponent(g2);
 
         this.m.drawImage(buffer);
         this.tank1.drawImage(buffer);
         this.tank2.drawImage(buffer);
 
-        System.out.println("tank1: " + tank1.getX() + " " + tank1.getY());
+
+
+
+
+        System.out.println("tank1: " + tank1.getX() + " " + tank1.getY() + " " + tank1.getA());
         System.out.println("tank2: " + tank2.getX() + " " + tank2.getY());
 
         this.tank1.checkForOtherTank(tank2);
 
-        BufferedImage left = world.getSubimage(tank1.getX() - SPLITSCREEN_WIDTH / 4, tank1.getY() - SPLITSCREEN_HEIGHT / 2, SPLITSCREEN_WIDTH / 2, SPLITSCREEN_HEIGHT);
-        BufferedImage right = world.getSubimage(tank2.getX() - SPLITSCREEN_WIDTH / 4, tank2.getY() - SPLITSCREEN_HEIGHT / 2, SPLITSCREEN_WIDTH / 2, SPLITSCREEN_HEIGHT);
+        this.tank1.checkScreenEdge();
+        this.tank2.checkScreenEdge();
+
+        BufferedImage left = world.getSubimage(tank1.getTx() - SPLITSCREEN_WIDTH / 4, tank1.getTy() - SPLITSCREEN_HEIGHT / 2, SPLITSCREEN_WIDTH / 2, SPLITSCREEN_HEIGHT);
+        BufferedImage right = world.getSubimage(tank2.getTx() - SPLITSCREEN_WIDTH / 4, tank2.getTy() - SPLITSCREEN_HEIGHT / 2, SPLITSCREEN_WIDTH / 2, SPLITSCREEN_HEIGHT);
+
+        for(int i = 0; i < World.getScreenWidth(); i += this.ubw.getImg().getWidth(null)){
+           // this.ubw.drawImage(buffer, i, 0);
+            this.ubw.drawImage(buffer, i, SCREEN_HEIGHT-this.ubw.getImg().getHeight(null));
+        }
+       // this.ubw.drawImage(buffer, 100, 100);
+        this.middleWalls[0].drawImage(buffer, this.middleWalls[0].getX(), this.middleWalls[0].getY());
 
         g2.drawImage(left, 0, 0, null);
         g2.drawImage(right, SPLITSCREEN_WIDTH / 2, 0, null);
+
+
+        this.tank1.collisions(middleWalls[0]);
 
         r = g.getClipBounds();
         System.out.println(r);
