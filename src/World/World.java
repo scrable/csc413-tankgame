@@ -20,20 +20,22 @@ public class World extends JPanel {
     private Tank tank1;
     private Tank tank2;
     private Map m = null;
+
+    //holds instances of walls for horizontal border
     private UnbreakableWall[] horizontalWalls;
-    private UnbreakableWall ubw;
 
-    public static ArrayList<WorldItem> getA3() {
-        return a3;
+    //holds instances of walls for vertical border
+    private UnbreakableWall[] verticalWalls;
+
+    public static ArrayList<WorldItem> getWorldItems() {
+        return worldItems;
     }
 
-    public static void setA3(ArrayList<WorldItem> a) {
-        a3 = a;
+    public static void setWorldItems(ArrayList<WorldItem> a) {
+        worldItems = a;
     }
 
-    private static ArrayList<WorldItem> a3 = new ArrayList<WorldItem>();
-
-
+    private static ArrayList<WorldItem> worldItems = new ArrayList<WorldItem>();
 
     public static void main(String[] args) {
         World w = new World();
@@ -41,20 +43,14 @@ public class World extends JPanel {
         try {
 
             while (true) {
-
+                //only run when there is an update to the tanks to prevent repainting when nothing changed
                 if (w.tank1.update() && w.tank2.update()) {
-                   // w.repaint();
                     w.repaint(r);
-//                    System.out.println(dl);
-//                    System.out.println(w.tank1);
-                    //a3.get(0).collisions();
-                    w.tank1.collisions();
+
+                    //check for collisions with each WorldItem
+                    for (WorldItem worldItem : worldItems) worldItem.collisions();
 
                 }
-               // w.repaint();
-//                w.paintComponent(w.getGraphics());
-//                System.out.println(w.tank1);
-
                 Thread.sleep(1000 / 144);
             }
         } catch (InterruptedException ignored) {
@@ -79,51 +75,55 @@ public class World extends JPanel {
             //load the background
             m = new Map("resources/Background.bmp");
 
-            //load the wall
-            ubw = new UnbreakableWall("resources/Wall1.gif");
+            //load the wall image
+            UnbreakableWall ubw = new UnbreakableWall("resources/Wall1.gif");
+
+            //need a counter here since i is being used to change the X value for each wall
             int counter = 0;
-            int numWallsHorizontal = SCREEN_WIDTH / this.ubw.getImg().getWidth(null);
+
+            //get the height once since it is always the same to reduce function calls in for loop
+            int tempWidth = ubw.getImg().getHeight(null);
+
+            int numWallsHorizontal = SCREEN_WIDTH / tempWidth;
             horizontalWalls = new UnbreakableWall[numWallsHorizontal];
-            for(int i = 0; i < SCREEN_WIDTH; i += this.ubw.getImg().getWidth(null)){
+
+            //add walls to an array to spawn later using drawimage for each element
+            for (int i = 0; i < SCREEN_WIDTH; i += tempWidth) {
                 UnbreakableWall tempubw = new UnbreakableWall("resources/Wall1.gif");
                 tempubw.setX(i);
                 horizontalWalls[counter] = tempubw;
                 counter++;
             }
 
-
-
-//            middleWalls[0].setX(100);
-//            middleWalls[0].setY(100);
-
-           WorldItem f = new UnbreakableWall("resources/Wall1.gif");
-            f.setX(100);
+            //create the walls to be used in the map
+            WorldItem f = new UnbreakableWall("resources/Wall1.gif");
+            f.setX(200);
             f.setY(100);
-//           ArrayList<WorldItem> itemA = new ArrayList<WorldItem>();
-//           itemA.add(f);
-//
-//           WorldItem.setWorldItemArray(itemA);
-            //a3.add(tank1);
-            a3.add(f);
+
+            //add the tanks to the ArrayList
+            worldItems.add(tank1);
+            worldItems.add(tank2);
+
+            //add the walls to the worldItem ArrayList to spawn later in paintComponent
+            worldItems.add(f);
 
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
 
-
+        //spawn instances of keylisteners
         UserInput tankInput1 = new UserInput(tank1, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_ENTER);
         UserInput tankInput2 = new UserInput(tank2, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_ENTER);
 
-
         this.jf.setLayout(new BorderLayout());
-        // this.lpane.add(m);
-        // this.jf.add(lpane, BorderLayout.CENTER);
 
+        //add the world to the jframe
         this.jf.add(this);
 
-
+        //ensure preferred sizes
         this.jf.pack();
 
+        //add the keylisteners to the jframe
         this.jf.addKeyListener(tankInput1);
         this.jf.addKeyListener(tankInput2);
 
@@ -132,11 +132,8 @@ public class World extends JPanel {
         jf.setLocationRelativeTo(null);
 
         this.jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        // this.jf.getContentPane().add(m);
 
         this.jf.setVisible(true);
-
-
     }
 
     @Override
@@ -145,46 +142,43 @@ public class World extends JPanel {
         buffer = this.world.createGraphics();
         super.paintComponent(g2);
 
+        //draw the background
         this.m.drawImage(buffer);
+
+        //draw the tanks
         this.tank1.drawImage(buffer);
         this.tank2.drawImage(buffer);
 
-
-
-
-
-
-//        System.out.println("tank1: " + tank1.getX() + " " + tank1.getY() + " " + tank1.getA());
-//        System.out.println("tank2: " + tank2.getX() + " " + tank2.getY());
-
-
+        //checkfor screen edges when tank is near se we don't refresh where there is no image
         this.tank1.checkScreenEdge();
         this.tank2.checkScreenEdge();
 
+        //get the screens for both sides
         BufferedImage left = world.getSubimage(tank1.getTx() - SPLITSCREEN_WIDTH / 4, tank1.getTy() - SPLITSCREEN_HEIGHT / 2, SPLITSCREEN_WIDTH / 2, SPLITSCREEN_HEIGHT);
         BufferedImage right = world.getSubimage(tank2.getTx() - SPLITSCREEN_WIDTH / 4, tank2.getTy() - SPLITSCREEN_HEIGHT / 2, SPLITSCREEN_WIDTH / 2, SPLITSCREEN_HEIGHT);
 
-        //draw the walls bordering the top and bottom of the world
-        //these don't need to be in the collision check since borderchecking is already done in tank class
-        for(int i = 0; i < SCREEN_WIDTH; i += this.ubw.getImg().getWidth(null)){
-            this.ubw.drawImage(buffer, i, SCREEN_HEIGHT- this.ubw.getImg().getHeight(null) - 4);
-            this.ubw.drawImage(buffer, i, 0);
-        }
-       // this.ubw.drawImage(buffer, 100, 100);
-//        this.middleWalls[0].drawImage(buffer, this.middleWalls[0].getX(), this.middleWalls[0].getY());
-        for (WorldItem worldItem : a3) worldItem.drawImage(buffer, worldItem.getX(), worldItem.getY());
+        //need a counter for the wall for loop since i is not incremental
+        int count = 0;
 
+        //get the height for a wall once since it is always the same to reduce function calls in for loop
+        int tempWidth = this.horizontalWalls[0].getImg().getHeight(null);
+
+        //draw the walls bordering the top and bottom of the world
+        //these don't need to check collisions since borderchecking is already done in tank class
+        for (int i = 0; i < SCREEN_WIDTH; i += tempWidth) {
+            this.horizontalWalls[count].drawImage(buffer, i, SCREEN_HEIGHT - tempWidth - 4);
+            this.horizontalWalls[count].drawImage(buffer, i, 0);
+        }
+
+        //draw each instance of WorldItem
+        for (WorldItem worldItem : worldItems) worldItem.drawImage(buffer, worldItem.getX(), worldItem.getY());
+
+        //draw each splitscreen
         g2.drawImage(left, 0, 0, null);
         g2.drawImage(right, SPLITSCREEN_WIDTH / 2, 0, null);
 
-
-//        this.tank1.collisions(middleWalls[0]);
-
+        //get a rectangle for repainting
         r = g.getClipBounds();
-//        System.out.println(r);
-
-
-
-//         g2.drawImage(world, 0, 0, null);
+        System.out.println(r);
     }
 }
