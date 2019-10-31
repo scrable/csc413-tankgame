@@ -19,7 +19,6 @@ public class Tank extends WorldItem{
     private boolean RightPressed;
     private boolean LeftPressed;
 
-
     Tank(int x, int y, int vx, int vy, int angle, String img) throws IOException {
         this.setX(x);
         this.setY(y);
@@ -31,7 +30,6 @@ public class Tank extends WorldItem{
         //check border here to make sure the initial position is valid
         checkBorder();
     }
-
 
     void toggleUpPressed() {
         this.UpPressed = true;
@@ -64,8 +62,6 @@ public class Tank extends WorldItem{
     void unToggleLeftPressed() {
         this.LeftPressed = false;
     }
-
-
 
     public boolean update() {
         boolean check = false;
@@ -129,6 +125,7 @@ public class Tank extends WorldItem{
         }
 
     }
+
     public void checkScreenEdge(){
         this.tx = this.getX();
         this.ty = this.getY();
@@ -188,34 +185,23 @@ public class Tank extends WorldItem{
 
     @Override
     public void collisions(){
-        ArrayList<WorldItem> itemA = World.getA3();
+        ArrayList<WorldItem> itemA = World.getWorldItems();
 
-        WorldItem item = itemA.get(0);
+        for (WorldItem item : itemA) {
 
-        Rectangle tankRectangle = new Rectangle(this.getX(), this.getY(), this.getImg().getWidth(null), this.getImg().getHeight(null));
-        Rectangle itemRectangle = new Rectangle(item.getX(), item.getY(), item.getImg().getWidth(null), item.getImg().getHeight(null));
-        if(tankRectangle.intersects(itemRectangle)){
-            Rectangle intersection = tankRectangle.intersection(itemRectangle);
-            //coming from the bottom
-//            if(this.getY() - this.getImg().getHeight(null)/2 < item.getY() + item.getImg().getHeight(null)) {
-//                this.setY(this.getImg().getHeight(null) / 2 + item.getY() + item.getImg().getHeight(null) / 4);
-//                System.out.println("collision1");
-//            }
-//            else if(this.getY() + this.getImg().getHeight(null)/2 > item.getY()){
-//                this.setY(item.getY() - this.getImg().getHeight(null)/2 - item.getImg().getHeight(null));
+            Rectangle tankRectangle = new Rectangle(this.getX(), this.getY(), this.getImg().getWidth(null), this.getImg().getHeight(null));
+            Rectangle itemRectangle = new Rectangle(item.getX(), item.getY(), item.getImg().getWidth(null), item.getImg().getHeight(null));
+            if (tankRectangle.intersects(itemRectangle)) {
+                Rectangle intersection = tankRectangle.intersection(itemRectangle);
 
-            System.out.println(intersection);
-
-            //from bottom into something
-            if(this.getY() > item.getY()){
-                //topleft
-                if(this.getX() < intersection.getX() + intersection.getWidth() && this.getX() > intersection.getWidth()) {
-                    System.out.println("HELLO");
-                    // else
-                    this.setY((int) intersection.getY() + (int) intersection.getHeight());
+                //from bottom into something
+                if (this.getY() > item.getY()) {
+                    //topleft
+                    if (this.getX() < intersection.getX() + intersection.getWidth() && this.getX() > intersection.getWidth()) {
+                        this.setY((int) intersection.getY() + (int) intersection.getHeight());
+                    }
                 }
-            }
-            //from top into something
+                //from top into something
 //            if(this.getY() < item.getY()){
 ////                if(this.getX() < intersection.getX())
 ////                    ;
@@ -230,6 +216,8 @@ public class Tank extends WorldItem{
 //            if(this.getX() < item.getX()){
 //                this.setX((int) intersection.getX() -  this.getImg().getWidth(null));// - (int) intersection.getHeight());
 //            }
+
+            }
         }
     }
 }
