@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Tank extends WorldItem{
+public class Tank extends WorldItem {
 
 
     private final int R = 2;
@@ -87,46 +87,46 @@ public class Tank extends WorldItem{
     }
 
     private void rotateLeft() {
-        this.setA(this.getA()-this.ROTATIONSPEED);
+        this.setA(this.getA() - this.ROTATIONSPEED);
     }
 
     private void rotateRight() {
-        this.setA(this.getA()+this.ROTATIONSPEED);
+        this.setA(this.getA() + this.ROTATIONSPEED);
     }
 
     private void moveBackwards() {
         this.setAx((int) Math.round(R * Math.cos(Math.toRadians(this.getA()))));
         this.setAy((int) Math.round(R * Math.sin(Math.toRadians(this.getA()))));
-        this.setX(getX()-getAx());
-        this.setY(getY()-getAy());
+        this.setX(getX() - getAx());
+        this.setY(getY() - getAy());
         checkBorder();
     }
 
     private void moveForwards() {
         this.setAx((int) Math.round(R * Math.cos(Math.toRadians(this.getA()))));
         this.setAy((int) Math.round(R * Math.sin(Math.toRadians(this.getA()))));
-        this.setX(getX()+getAx());
-        this.setY(getY()+getAy());
+        this.setX(getX() + getAx());
+        this.setY(getY() + getAy());
         checkBorder();
     }
 
     private void checkBorder() {
-        if(this.getX() < 30){
+        if (this.getX() < 30) {
             this.setX(30);
         }
         if (this.getX() >= World.SCREEN_WIDTH - 88) {
             this.setX(World.SCREEN_WIDTH - 88);
         }
-        if(this.getY() < 40){
+        if (this.getY() < 40) {
             this.setY(40);
         }
-        if(this.getY() >= World.SCREEN_HEIGHT - 80){
+        if (this.getY() >= World.SCREEN_HEIGHT - 80) {
             this.setY(World.SCREEN_HEIGHT - 80);
         }
 
     }
 
-    public void checkScreenEdge(){
+    public void checkScreenEdge() {
         this.tx = this.getX();
         this.ty = this.getY();
 
@@ -184,39 +184,34 @@ public class Tank extends WorldItem{
     }
 
     @Override
-    public void collisions(){
+    public void collisions() {
         ArrayList<WorldItem> itemA = World.getWorldItems();
 
         for (WorldItem item : itemA) {
+            if (item instanceof Wall) {
+                Rectangle tankRectangle = new Rectangle(this.getX(), this.getY(), this.getImg().getWidth(null), this.getImg().getHeight(null));
+                Rectangle itemRectangle = new Rectangle(item.getX(), item.getY(), item.getImg().getWidth(null), item.getImg().getHeight(null));
+                if (tankRectangle.intersects(itemRectangle)) {
+                    Rectangle intersection = tankRectangle.intersection(itemRectangle);
 
-            Rectangle tankRectangle = new Rectangle(this.getX(), this.getY(), this.getImg().getWidth(null), this.getImg().getHeight(null));
-            Rectangle itemRectangle = new Rectangle(item.getX(), item.getY(), item.getImg().getWidth(null), item.getImg().getHeight(null));
-            if (tankRectangle.intersects(itemRectangle)) {
-                Rectangle intersection = tankRectangle.intersection(itemRectangle);
-
-                //from bottom into something
-                if (this.getY() > item.getY()) {
-                    //topleft
-                    if (this.getX() < intersection.getX() + intersection.getWidth() && this.getX() > intersection.getWidth()) {
+                    //from bottom in to something
+                    if (this.getY() >= item.getY() + item.getImg().getHeight(null) - 2) {
                         this.setY((int) intersection.getY() + (int) intersection.getHeight());
                     }
-                }
-                //from top into something
-//            if(this.getY() < item.getY()){
-////                if(this.getX() < intersection.getX())
-////                    ;
-////                else
-//                    this.setY((int) intersection.getY() -  this.getImg().getHeight(null));// - (int) intersection.getHeight());
-//            }
-//            //from right into something
-//            if(this.getX() > item.getX()){
-//                this.setX((int) intersection.getX() + (int) intersection.getWidth());
-//            }
-//            //from left into something
-//            if(this.getX() < item.getX()){
-//                this.setX((int) intersection.getX() -  this.getImg().getWidth(null));// - (int) intersection.getHeight());
-//            }
+                    //from top into something
+                    else if (this.getY() <= item.getY() - this.getImg().getHeight(null) + 2) {
+                        this.setY((int) intersection.getY() - this.getImg().getHeight(null));
+                    }
+                    //from right into something
+                    else if (this.getX() >= item.getX() + item.getImg().getWidth(null) - 2) {
+                        this.setX((int) intersection.getX() + (int) intersection.getWidth());
 
+                    }
+                    //from left into something
+                    else if (this.getX() + this.getImg().getWidth(null) <= item.getX() + 2) {
+                        this.setX((int) intersection.getX() - this.getImg().getWidth(null));
+                    }
+                }
             }
         }
     }

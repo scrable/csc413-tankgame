@@ -179,6 +179,5 @@ public class World extends JPanel {
 
         //get a rectangle for repainting
         r = g.getClipBounds();
-        System.out.println(r);
     }
 }
