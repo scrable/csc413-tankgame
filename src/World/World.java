@@ -95,17 +95,28 @@ public class World extends JPanel {
                 counter++;
             }
 
-            //create the walls to be used in the map
-            WorldItem f = new UnbreakableWall("resources/Wall1.gif");
-            f.setX(200);
-            f.setY(100);
+            //create the vertical walls to be used in the map
+            int innerWallHeight = ubw.getImg().getHeight(null);
+            for(int j = 400; j < SCREEN_HEIGHT - 400; j += innerWallHeight){
+                UnbreakableWall tempWallArea1 = new UnbreakableWall("resources/Wall1.gif");
+                tempWallArea1.setX(400);
+                tempWallArea1.setY(j);
+
+                UnbreakableWall tempWallArea2 = new UnbreakableWall("resources/Wall1.gif");
+                tempWallArea2.setX(SCREEN_WIDTH - 400);
+                tempWallArea2.setY(j);
+
+                //add the walls to the worldItem ArrayList to spawn later in paintComponent
+                worldItems.add(tempWallArea1);
+                worldItems.add(tempWallArea2);
+            }
+
 
             //add the tanks to the ArrayList
             worldItems.add(tank1);
             worldItems.add(tank2);
 
-            //add the walls to the worldItem ArrayList to spawn later in paintComponent
-            worldItems.add(f);
+
 
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
@@ -148,6 +159,7 @@ public class World extends JPanel {
         //get the screens for both sides
         BufferedImage left = world.getSubimage(tank1.getTx() - SPLITSCREEN_WIDTH / 4, tank1.getTy() - SPLITSCREEN_HEIGHT / 2, SPLITSCREEN_WIDTH / 2, SPLITSCREEN_HEIGHT);
         BufferedImage right = world.getSubimage(tank2.getTx() - SPLITSCREEN_WIDTH / 4, tank2.getTy() - SPLITSCREEN_HEIGHT / 2, SPLITSCREEN_WIDTH / 2, SPLITSCREEN_HEIGHT);
+        BufferedImage mini = world.getSubimage(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
         //need a counter for the wall for loop since i is not incremental
         int count = 0;
@@ -168,6 +180,8 @@ public class World extends JPanel {
         //draw each splitscreen
         g2.drawImage(left, 0, 0, null);
         g2.drawImage(right, SPLITSCREEN_WIDTH / 2, 0, null);
+
+        g2.drawImage(mini, SPLITSCREEN_WIDTH/2 - SPLITSCREEN_WIDTH/8 + 10, SPLITSCREEN_HEIGHT - 200, 200, 200, null);
 
         //get a rectangle for repainting
         r = g.getClipBounds();
