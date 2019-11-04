@@ -123,7 +123,7 @@ public class Tank extends WorldItem {
         if (this.getY() >= World.SCREEN_HEIGHT - 80) {
             this.setY(World.SCREEN_HEIGHT - 80);
         }
-
+        checkScreenEdge();
     }
 
     public void checkScreenEdge() {
@@ -169,18 +169,13 @@ public class Tank extends WorldItem {
         return "x=" + this.getX() + ", y=" + this.getY() + ", angle=" + this.getA();
     }
 
-
-    public void drawImage(Graphics g) {
+    @Override
+    public void drawImage(Graphics g, int x, int y) {
         AffineTransform rotation = AffineTransform.getTranslateInstance(this.getX(), this.getY());
         rotation.rotate(Math.toRadians(this.getA()), this.getImg().getWidth(null) / 2.0, this.getImg().getHeight(null) / 2.0);
         Graphics2D g2d = (Graphics2D) g;
 
         g2d.drawImage(getImg(), rotation, null);
-    }
-
-    @Override
-    public void drawImage(Graphics g, int x, int y) {
-
     }
 
     @Override

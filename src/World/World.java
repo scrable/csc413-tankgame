@@ -145,14 +145,6 @@ public class World extends JPanel {
         //draw the background
         this.m.drawImage(buffer);
 
-        //draw the tanks
-        this.tank1.drawImage(buffer);
-        this.tank2.drawImage(buffer);
-
-        //checkfor screen edges when tank is near se we don't refresh where there is no image
-        this.tank1.checkScreenEdge();
-        this.tank2.checkScreenEdge();
-
         //get the screens for both sides
         BufferedImage left = world.getSubimage(tank1.getTx() - SPLITSCREEN_WIDTH / 4, tank1.getTy() - SPLITSCREEN_HEIGHT / 2, SPLITSCREEN_WIDTH / 2, SPLITSCREEN_HEIGHT);
         BufferedImage right = world.getSubimage(tank2.getTx() - SPLITSCREEN_WIDTH / 4, tank2.getTy() - SPLITSCREEN_HEIGHT / 2, SPLITSCREEN_WIDTH / 2, SPLITSCREEN_HEIGHT);
