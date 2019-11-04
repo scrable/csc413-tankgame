@@ -21,11 +21,8 @@ public class World extends JPanel {
     private Tank tank2;
     private Map m = null;
 
-    //holds instances of walls for horizontal border
-    private UnbreakableWall[] horizontalWalls;
-
-    //holds instances of walls for vertical border
-    private UnbreakableWall[] verticalWalls;
+    private UnbreakableWall ubw;
+    private BreakableWall bw;
 
     public static ArrayList<WorldItem> getWorldItems() {
         return worldItems;
@@ -75,27 +72,41 @@ public class World extends JPanel {
             //load the background
             m = new Map("resources/Background.bmp");
 
-            //load the wall image
-            UnbreakableWall ubw = new UnbreakableWall("resources/Wall1.gif");
+            //load the wall images
+            ubw = new UnbreakableWall("resources/Wall1.gif");
+            bw = new BreakableWall("resources/wall2.gif");
+
 
             //need a counter here since i is being used to change the X value for each wall
-            int counter = 0;
+//            int counter = 0;
+//
+//            //get the height and width once since it is always the same to reduce function calls in for loop
+//            int tempWidthUBW = ubw.getImg().getWidth(null);
+//            int tempHeightUBW = ubw.getImg().getHeight(null);
+//
+//            int numWallsHorizontal = SCREEN_WIDTH / tempWidthUBW;
+//            horizontalWalls = new UnbreakableWall[numWallsHorizontal];
+//
+//            //add horizontal walls to an array to spawn later using drawimage for each element
+//            for (int i = 0; i < SCREEN_WIDTH; i += tempWidthUBW) {
+//                UnbreakableWall tempubw = new UnbreakableWall("resources/Wall1.gif");
+//                tempubw.setX(i);
+//                horizontalWalls[counter] = tempubw;
+//                counter++;
+//            }
+//
+//            int numWallsVertical = SCREEN_HEIGHT / tempHeightUBW;
+//            verticalWalls = new UnbreakableWall[numWallsVertical];
+//
+//            counter = 0;
+//            for (int i = 0; i < SCREEN_HEIGHT; i += tempHeightUBW) {
+//                UnbreakableWall tempubw = new UnbreakableWall("resources/Wall1.gif");
+//                tempubw.setX(i);
+//                horizontalWalls[counter] = tempubw;
+//                counter++;
+//            }
 
-            //get the height once since it is always the same to reduce function calls in for loop
-            int tempWidth = ubw.getImg().getHeight(null);
-
-            int numWallsHorizontal = SCREEN_WIDTH / tempWidth;
-            horizontalWalls = new UnbreakableWall[numWallsHorizontal];
-
-            //add walls to an array to spawn later using drawimage for each element
-            for (int i = 0; i < SCREEN_WIDTH; i += tempWidth) {
-                UnbreakableWall tempubw = new UnbreakableWall("resources/Wall1.gif");
-                tempubw.setX(i);
-                horizontalWalls[counter] = tempubw;
-                counter++;
-            }
-
-            //create the vertical walls to be used in the map
+            //create the unbreakable vertical walls to be used in the middle of the map
             int innerWallHeight = ubw.getImg().getHeight(null);
             for(int j = 400; j < SCREEN_HEIGHT - 400; j += innerWallHeight){
                 UnbreakableWall tempWallArea1 = new UnbreakableWall("resources/Wall1.gif");
@@ -111,12 +122,9 @@ public class World extends JPanel {
                 worldItems.add(tempWallArea2);
             }
 
-
             //add the tanks to the ArrayList
             worldItems.add(tank1);
             worldItems.add(tank2);
-
-
 
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
@@ -165,13 +173,18 @@ public class World extends JPanel {
         int count = 0;
 
         //get the height for a wall once since it is always the same to reduce function calls in for loop
-        int tempWidth = this.horizontalWalls[0].getImg().getHeight(null);
+        int tempWidth = ubw.getImg().getWidth(null);
+        int tempHeight = ubw.getImg().getHeight(null);
 
         //draw the walls bordering the top and bottom of the world
         //these don't need to check collisions since borderchecking is already done in tank class
         for (int i = 0; i < SCREEN_WIDTH; i += tempWidth) {
-            this.horizontalWalls[count].drawImage(buffer, i, SCREEN_HEIGHT - tempWidth - 4);
-            this.horizontalWalls[count].drawImage(buffer, i, 0);
+            ubw.drawImage(buffer, i, SCREEN_HEIGHT - tempWidth);
+            ubw.drawImage(buffer, i, 0);
+        }
+        for (int i = 0; i < SCREEN_HEIGHT; i += tempHeight) {
+            ubw.drawImage(buffer, SCREEN_WIDTH - tempWidth, i);
+            ubw.drawImage(buffer, 0, i);
         }
 
         //draw each instance of WorldItem
@@ -181,7 +194,7 @@ public class World extends JPanel {
         g2.drawImage(left, 0, 0, null);
         g2.drawImage(right, SPLITSCREEN_WIDTH / 2, 0, null);
 
-        g2.drawImage(mini, SPLITSCREEN_WIDTH/2 - SPLITSCREEN_WIDTH/8 + 10, SPLITSCREEN_HEIGHT - 200, 200, 200, null);
+        g2.drawImage(mini, SPLITSCREEN_WIDTH/2 - SPLITSCREEN_WIDTH/8 + 10, SPLITSCREEN_HEIGHT - 210, 200, 200, null);
 
         //get a rectangle for repainting
         r = g.getClipBounds();
