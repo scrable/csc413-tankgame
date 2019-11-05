@@ -1,6 +1,7 @@
 package World;
 
 import World.Powerup.Bullet;
+import World.Powerup.DoubleDamage;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -34,6 +35,7 @@ public class World extends JPanel {
     private BreakableWall bw;
     private tankHealth life;
     private Bullet bullet;
+    private DoubleDamage DD;
 
     public static ArrayList<WorldItem> worldItems = new ArrayList<WorldItem>();
     public static ArrayList<Integer> itemsToRemove = new ArrayList<>();
@@ -43,6 +45,12 @@ public class World extends JPanel {
         w.init();
         try {
             while (!gameover) {
+                //clear items that should be deleted from worldItems before we loop through spawning worldItems to prevent concurrent modification
+                for (Integer integer : itemsToRemove) {
+                    worldItems.remove(worldItems.get(integer));
+                }
+                itemsToRemove.clear();
+                Thread.sleep(1000 / 144);
                 //only run if a bullet is updating or a tank is updating
                 if (Bullet.bullets.size() > 0) {
                     Bullet.collisions();
@@ -56,7 +64,6 @@ public class World extends JPanel {
                     Tank.collisions(w.tank2);
                     w.repaint(r);
                 }
-                Thread.sleep(1000 / 144);
             }
         } catch (InterruptedException ignored) {
         }
@@ -84,6 +91,9 @@ public class World extends JPanel {
             //load bullet image
             bullet = new Bullet();
             bullet.setImg(ImageIO.read(getClass().getResource("/resources/Weapon.gif")));
+
+            DD = new DoubleDamage();
+            DD.setImg(ImageIO.read(getClass().getResource("/resources/Pickup.gif")));
 
             //load each player winning image
             p1w = ImageIO.read(getClass().getResource("/resources/p1w.png"));
@@ -118,6 +128,11 @@ public class World extends JPanel {
                 worldItems.add(tempWallArea1);
                 worldItems.add(tempWallArea2);
             }
+
+            DoubleDamage d = new DoubleDamage();
+            d.setX(700);
+            d.setY(680);
+            worldItems.add(d);
 
             //add the tanks to the ArrayList
             worldItems.add(tank1);
@@ -187,12 +202,6 @@ public class World extends JPanel {
             ubw.drawImage(buffer, SCREEN_WIDTH - tempWidth, i);
             ubw.drawImage(buffer, 0, i);
         }
-
-        //clear items that should be deleted from worldItems before we loop through spawning worldItems to prevent concurrent modification
-        for (Integer integer : itemsToRemove) {
-            worldItems.remove(worldItems.get(integer));
-        }
-        itemsToRemove.clear();
 
         //draw each instance of WorldItem
         for (WorldItem worldItem : worldItems) {

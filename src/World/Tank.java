@@ -1,6 +1,7 @@
 package World;
 
 import World.Powerup.Bullet;
+import World.Powerup.DoubleDamage;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -20,6 +21,7 @@ public class Tank extends WorldItem {
     private boolean shootPressed;
     private double timePressed = 0;
     private String shooter;
+    private String bulletType = "bullet";
 
     //starting HP
     private int health = 100;
@@ -148,7 +150,7 @@ public class Tank extends WorldItem {
 
     public boolean shootPressed() {
         if(System.currentTimeMillis() - timePressed > 500) {
-            Bullet.generateBullet(this.getX(), this.getY(), this.getA(), this.getShooter());
+            Bullet.generateBullet(this.getX(), this.getY(), this.getA(), this.bulletType, this.getShooter());
             timePressed = System.currentTimeMillis();
         }
         return shootPressed;
@@ -255,6 +257,15 @@ public class Tank extends WorldItem {
                     else if (tank.getX() + tank.getImg().getWidth(null) <= item.getX() + 2) {
                         tank.setX((int) intersection.getX() - tank.getImg().getWidth(null));
                     }
+                }
+            }
+            else if (item instanceof DoubleDamage){
+                Rectangle tankRectangle = new Rectangle(tank.getX(), tank.getY(), tank.getImg().getWidth(null), tank.getImg().getHeight(null));
+                Rectangle itemRectangle = new Rectangle(item.getX(), item.getY(), item.getImg().getWidth(null), item.getImg().getHeight(null));
+                if (tankRectangle.intersects(itemRectangle)) {
+                    tank.bulletType = "DoubleDamage";
+                    int index = World.worldItems.indexOf(item);
+                    World.itemsToRemove.add(index);
                 }
             }
         }

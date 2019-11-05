@@ -14,18 +14,32 @@ import java.util.ArrayList;
 public class Bullet extends WorldItem {
     private static Image img;
     private String shooter;
+    private String type;
 
     private int bulletSpeed = 5;
+    private int bulletDamage = 25;
 
     public static ArrayList<Bullet> bullets = new ArrayList<>();
 
-    public static void generateBullet(int x, int y, int a, String shooter) {
+    public static void generateBullet(int x, int y, int a, String s, String shooter) {
         Bullet b = new Bullet();
+        b.type = s;
+        if(b.type.equals("DoubleDamage"))
+        {
+            DoubleDamage d = new DoubleDamage();
+            b.setImg(d.getImg());
+            b.bulletDamage = 50;
+
+        }
+        else{
+            b.setImg(img);
+        }
         b.setX(x);
         b.setY(y);
         b.setA(a);
-        b.setImg(img);
+
         b.setShooter(shooter);
+
         bullets.add(b);
     }
 
@@ -85,7 +99,7 @@ public class Bullet extends WorldItem {
                             bullets.remove(i);
                             if (lives > 0) {
                                 int health = ((Tank) item).getHealth();
-                                health-=25;
+                                health-=b.bulletDamage;
                                 if(health != 0){
                                     ((Tank) item).setHealth(health);
                                 }
