@@ -4,11 +4,11 @@ import World.World;
 import World.WorldItem;
 import World.UnbreakableWall;
 import World.Tank;
+import World.BreakableWall;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class Bullet extends WorldItem {
@@ -71,6 +71,13 @@ public class Bullet extends WorldItem {
                             break;
                         }
                     }
+                    else if(item instanceof BreakableWall){
+                        if(bulletRectangle.intersects(itemRectangle)){
+                            bullets.remove(i);
+                            World.itemsToRemove.add(j);
+                            break;
+                        }
+                    }
                     //don't collide with the tank that shot the bullet
                     else if (item instanceof Tank && !(b.shooter.equals(((Tank) item).getShooter()))){
                         if (bulletRectangle.intersects(itemRectangle)) {
@@ -93,6 +100,7 @@ public class Bullet extends WorldItem {
                         }
                     }
                 }
+
             }
 
         }

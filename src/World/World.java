@@ -36,6 +36,7 @@ public class World extends JPanel {
     private Bullet bullet;
 
     public static ArrayList<WorldItem> worldItems = new ArrayList<WorldItem>();
+    public static ArrayList<Integer> itemsToRemove = new ArrayList<>();
 
     public static void main(String[] args) {
         World w = new World();
@@ -104,6 +105,20 @@ public class World extends JPanel {
                 worldItems.add(tempWallArea2);
             }
 
+            innerWallHeight = bw.getImg().getHeight(null);
+            for (int j = 1000; j < SCREEN_HEIGHT - 400; j += innerWallHeight){
+                BreakableWall tempWallArea1 = new BreakableWall(ImageIO.read(getClass().getResource("/resources/Wall2.gif")));
+                tempWallArea1.setX(1000);
+                tempWallArea1.setY(j);
+
+                BreakableWall tempWallArea2 = new BreakableWall(ImageIO.read(getClass().getResource("/resources/Wall2.gif")));
+                tempWallArea2.setX(SCREEN_WIDTH - 1000);
+                tempWallArea2.setY(j);
+
+                worldItems.add(tempWallArea1);
+                worldItems.add(tempWallArea2);
+            }
+
             //add the tanks to the ArrayList
             worldItems.add(tank1);
             worldItems.add(tank2);
@@ -146,6 +161,7 @@ public class World extends JPanel {
         //draw the background
         this.m.drawImage(buffer);
 
+        //draw all active bullets
         if (Bullet.bullets.size() > 0) {
             for (int i = 0; i < Bullet.bullets.size(); i++) {
                 Bullet.bullets.get(i).drawImage(buffer, Bullet.bullets.get(i).getX(), Bullet.bullets.get(i).getY());
@@ -171,6 +187,12 @@ public class World extends JPanel {
             ubw.drawImage(buffer, SCREEN_WIDTH - tempWidth, i);
             ubw.drawImage(buffer, 0, i);
         }
+
+        //clear items that should be deleted from worldItems before we loop through spawning worldItems to prevent concurrent modification
+        for (Integer integer : itemsToRemove) {
+            worldItems.remove(worldItems.get(integer));
+        }
+        itemsToRemove.clear();
 
         //draw each instance of WorldItem
         for (WorldItem worldItem : worldItems) {
