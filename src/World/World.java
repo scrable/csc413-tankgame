@@ -1,5 +1,7 @@
 package World;
 
+import World.Powerup.Bullet;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -21,18 +23,13 @@ public class World extends JPanel {
     private Tank tank2;
     private Map m = null;
 
+    //worlditems
     private UnbreakableWall ubw;
     private BreakableWall bw;
+    private tankHealth life;
+    private Bullet bullet;
 
-    public static ArrayList<WorldItem> getWorldItems() {
-        return worldItems;
-    }
-
-    public static void setWorldItems(ArrayList<WorldItem> a) {
-        worldItems = a;
-    }
-
-    private static ArrayList<WorldItem> worldItems = new ArrayList<WorldItem>();
+    public static ArrayList<WorldItem> worldItems = new ArrayList<WorldItem>();
 
     public static void main(String[] args) {
         World w = new World();
@@ -40,13 +37,16 @@ public class World extends JPanel {
         try {
 
             while (true) {
+                if(Bullet.bullets.size() > 0)
+                {
+                    Bullet.update();
+                    w.repaint(r);
+                }
                 //only run when there is an update to the tanks to prevent repainting when nothing changed
                 if (w.tank1.update() && w.tank2.update()) {
                     w.repaint(r);
-
                     //check for collisions with each WorldItem
                     for (WorldItem worldItem : worldItems) worldItem.collisions();
-
                 }
                 Thread.sleep(1000 / 144);
             }
@@ -76,35 +76,10 @@ public class World extends JPanel {
             ubw = new UnbreakableWall("resources/Wall1.gif");
             bw = new BreakableWall("resources/wall2.gif");
 
+            life = new tankHealth("resources/Heart.png");
 
-            //need a counter here since i is being used to change the X value for each wall
-//            int counter = 0;
-//
-//            //get the height and width once since it is always the same to reduce function calls in for loop
-//            int tempWidthUBW = ubw.getImg().getWidth(null);
-//            int tempHeightUBW = ubw.getImg().getHeight(null);
-//
-//            int numWallsHorizontal = SCREEN_WIDTH / tempWidthUBW;
-//            horizontalWalls = new UnbreakableWall[numWallsHorizontal];
-//
-//            //add horizontal walls to an array to spawn later using drawimage for each element
-//            for (int i = 0; i < SCREEN_WIDTH; i += tempWidthUBW) {
-//                UnbreakableWall tempubw = new UnbreakableWall("resources/Wall1.gif");
-//                tempubw.setX(i);
-//                horizontalWalls[counter] = tempubw;
-//                counter++;
-//            }
-//
-//            int numWallsVertical = SCREEN_HEIGHT / tempHeightUBW;
-//            verticalWalls = new UnbreakableWall[numWallsVertical];
-//
-//            counter = 0;
-//            for (int i = 0; i < SCREEN_HEIGHT; i += tempHeightUBW) {
-//                UnbreakableWall tempubw = new UnbreakableWall("resources/Wall1.gif");
-//                tempubw.setX(i);
-//                horizontalWalls[counter] = tempubw;
-//                counter++;
-//            }
+            bullet  = new Bullet();
+            bullet.setImg("resources/Weapon.gif");
 
             //create the unbreakable vertical walls to be used in the middle of the map
             int innerWallHeight = ubw.getImg().getHeight(null);
@@ -163,14 +138,15 @@ public class World extends JPanel {
 
         //draw the background
         this.m.drawImage(buffer);
+        if(Bullet.bullets.size() > 0) {
+            for(int i = 0; i < Bullet.bullets.size(); i++){
+                Bullet.bullets.get(i).drawImage(buffer, Bullet.bullets.get(i).getX(), Bullet.bullets.get(i).getY());}
+        }
 
         //get the screens for both sides
         BufferedImage left = world.getSubimage(tank1.getTx() - SPLITSCREEN_WIDTH / 4, tank1.getTy() - SPLITSCREEN_HEIGHT / 2, SPLITSCREEN_WIDTH / 2, SPLITSCREEN_HEIGHT);
         BufferedImage right = world.getSubimage(tank2.getTx() - SPLITSCREEN_WIDTH / 4, tank2.getTy() - SPLITSCREEN_HEIGHT / 2, SPLITSCREEN_WIDTH / 2, SPLITSCREEN_HEIGHT);
         BufferedImage mini = world.getSubimage(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
-        //need a counter for the wall for loop since i is not incremental
-        int count = 0;
 
         //get the height for a wall once since it is always the same to reduce function calls in for loop
         int tempWidth = ubw.getImg().getWidth(null);
@@ -188,11 +164,26 @@ public class World extends JPanel {
         }
 
         //draw each instance of WorldItem
-        for (WorldItem worldItem : worldItems) worldItem.drawImage(buffer, worldItem.getX(), worldItem.getY());
+        for (WorldItem worldItem : worldItems) {
+            worldItem.drawImage(buffer, worldItem.getX(), worldItem.getY());
+        }
 
         //draw each splitscreen
         g2.drawImage(left, 0, 0, null);
         g2.drawImage(right, SPLITSCREEN_WIDTH / 2, 0, null);
+
+        int placement;
+        //draw tank1 lives
+        for(int i = 1; i <= this.tank1.getLives(); i++)
+        {
+            placement = (life.getImg().getWidth(null) + 10) * i;
+            life.drawImage(g2, placement/2, 10);
+        }
+        //draw tank2 lives
+        for(int i = this.tank2.getLives(); i >= 1; i--){
+            placement = (life.getImg().getWidth(null) + 10) * i;
+            life.drawImage(g2, placement/2 + SPLITSCREEN_WIDTH - 130, 10);
+        }
 
         g2.drawImage(mini, SPLITSCREEN_WIDTH/2 - SPLITSCREEN_WIDTH/8 + 10, SPLITSCREEN_HEIGHT - 210, 200, 200, null);
 
