@@ -1,15 +1,13 @@
 package World;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
+import java.awt.image.BufferedImage;
 
 public class tankHealth {
     private Image image;
 
-    tankHealth(String img) throws IOException {
-        image = ImageIO.read(new File(img));
+    tankHealth(BufferedImage img) {
+        image = img;
     }
 
     public Image getImg() {

@@ -5,10 +5,9 @@ import World.WorldItem;
 import World.UnbreakableWall;
 import World.Tank;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.io.File;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -38,8 +37,8 @@ public class Bullet extends WorldItem {
         g2d.drawImage(getImg(), rotation, null);
     }
 
-    public void setImg(String s) throws IOException {
-        img = ImageIO.read(new File(s));
+    public void setImg(BufferedImage image) {
+        img = image;
     }
 
     private void setShooter(String shooter){

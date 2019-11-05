@@ -2,10 +2,9 @@ package World;
 
 import World.Powerup.Bullet;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.io.File;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class Tank extends WorldItem {
@@ -29,12 +28,12 @@ public class Tank extends WorldItem {
     //number of starting lives
     private int lives = 3;
 
-    Tank(int x, int y, int vx, int vy, int angle, String img, String shooter) throws IOException {
+    Tank(int x, int y, int vx, int vy, int angle, BufferedImage img, String shooter) {
         this.setX(x);
         this.setY(y);
         this.setAx(vx);
         this.setAy(vy);
-        this.setImg(ImageIO.read(new File(img)));
+        this.setImg(img);
         this.setA(angle);
         this.setShooter(shooter);
 

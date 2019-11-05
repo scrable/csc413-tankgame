@@ -7,7 +7,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -73,32 +72,35 @@ public class World extends JPanel {
              */
 
             //load the tank images
-            tank1 = new Tank(600, 660, 0, 0, 0, "resources/Tank1.png", "tank1");
-            tank2 = new Tank(800, 700, 0, 0, 180, "resources/Tank1.png", "tank2");
+            tank1 = new Tank(600, 660, 0, 0, 0, ImageIO.read(getClass().getResource("/resources/Tank1.png")), "tank1");
+            tank2 = new Tank(800, 700, 0, 0, 180, ImageIO.read(getClass().getResource("/resources/Tank1.png")), "tank2");
 
             //load the background
-            m = new Map("resources/Background.bmp");
+            m = new Map(ImageIO.read(getClass().getResource("/resources/Background.bmp")));
 
             //load the wall images
-            ubw = new UnbreakableWall("resources/Wall1.gif");
-            bw = new BreakableWall("resources/wall2.gif");
+            ubw = new UnbreakableWall(ImageIO.read(getClass().getResource("/resources/Wall1.gif")));
+            bw = new BreakableWall(ImageIO.read(getClass().getResource("/resources/Wall2.gif")));
 
-            life = new tankHealth("resources/Heart.png");
+            //load heart icon for lives
+            life = new tankHealth(ImageIO.read(getClass().getResource("/resources/Heart.png")));
 
+            //load bullet image
             bullet = new Bullet();
-            bullet.setImg("resources/Weapon.gif");
+            bullet.setImg(ImageIO.read(getClass().getResource("/resources/Weapon.gif")));
 
-            p1w = ImageIO.read(new File("resources/p1w.png"));
-            p2w = ImageIO.read(new File("resources/p2w.png"));
+            //load each player winning image
+            p1w = ImageIO.read(getClass().getResource("/resources/p1w.png"));
+            p2w = ImageIO.read(getClass().getResource("/resources/p2w.png"));
 
             //create the unbreakable vertical walls to be used in the middle of the map
             int innerWallHeight = ubw.getImg().getHeight(null);
             for (int j = 400; j < SCREEN_HEIGHT - 400; j += innerWallHeight) {
-                UnbreakableWall tempWallArea1 = new UnbreakableWall("resources/Wall1.gif");
+                UnbreakableWall tempWallArea1 = new UnbreakableWall(ImageIO.read(getClass().getResource("/resources/Wall1.gif")));
                 tempWallArea1.setX(400);
                 tempWallArea1.setY(j);
 
-                UnbreakableWall tempWallArea2 = new UnbreakableWall("resources/Wall1.gif");
+                UnbreakableWall tempWallArea2 = new UnbreakableWall(ImageIO.read(getClass().getResource("/resources/Wall1.gif")));
                 tempWallArea2.setX(SCREEN_WIDTH - 400);
                 tempWallArea2.setY(j);
 
@@ -148,7 +150,6 @@ public class World extends JPanel {
 
         //draw the background
         this.m.drawImage(buffer);
-
 
         if (Bullet.bullets.size() > 0) {
             for (int i = 0; i < Bullet.bullets.size(); i++) {

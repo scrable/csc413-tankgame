@@ -1,7 +1,6 @@
 package World;
 
 import java.awt.*;
-import java.util.ArrayList;
 
 public abstract class WorldItem {
     private int a;
@@ -10,8 +9,6 @@ public abstract class WorldItem {
     private int ax;
     private int ay;
     private Image img;
-
-    //private static ArrayList<WorldItem> WorldItemArray = new ArrayList<WorldItem>();
 
     public Image getImg() {
         return img;

@@ -3,14 +3,15 @@ package World;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 public class Map extends JPanel {
     private Image image;
 
-    Map(String img) throws IOException {
-        image = ImageIO.read(new File(img));
+    Map(BufferedImage img) {
+        image = img;
     }
 
     @Override

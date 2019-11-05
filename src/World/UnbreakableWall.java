@@ -1,10 +1,11 @@
 package World;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class UnbreakableWall extends Wall {
-    UnbreakableWall(String img) throws IOException {
+    UnbreakableWall(BufferedImage img) throws IOException {
         super(img);
     }
 

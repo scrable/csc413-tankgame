@@ -1,12 +1,10 @@
 package World;
 
-import javax.imageio.ImageIO;
-import java.io.File;
-import java.io.IOException;
+import java.awt.image.BufferedImage;
 
 public abstract class Wall extends WorldItem{
-    Wall(String img) throws IOException {
-       this.setImg(ImageIO.read(new File(img)));
+    Wall(BufferedImage img) {
+       this.setImg(img);
     }
 
 
