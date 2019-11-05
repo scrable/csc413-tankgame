@@ -47,12 +47,13 @@ public class World extends JPanel {
                     Bullet.collisions();
                     w.repaint(r);
                 }
-                if (w.tank1.update() || w.tank2.update()) {
-                    w.repaint(r);
-
-                    //check for collisions with each tank
+                if (w.tank1.update()) {
                     Tank.collisions(w.tank1);
+                    w.repaint(r);
+                }
+                if(w.tank2.update()) {
                     Tank.collisions(w.tank2);
+                    w.repaint(r);
                 }
                 Thread.sleep(1000 / 144);
             }
@@ -61,16 +62,10 @@ public class World extends JPanel {
     }
 
     private void init() {
-        this.jf = new JFrame("Tank Rotation");
+        this.jf = new JFrame("Tank Wars");
         this.world = new BufferedImage(World.SCREEN_WIDTH, World.SCREEN_HEIGHT, BufferedImage.TYPE_INT_RGB);
 
         try {
-            System.out.println(System.getProperty("user.dir"));
-            /*
-             * note class loaders read files from the out folder (build folder in netbeans) and not the
-             * current working directory.
-             */
-
             //load the tank images
             tank1 = new Tank(600, 660, 0, 0, 0, ImageIO.read(getClass().getResource("/resources/Tank1.png")), "tank1");
             tank2 = new Tank(800, 700, 0, 0, 180, ImageIO.read(getClass().getResource("/resources/Tank1.png")), "tank2");
