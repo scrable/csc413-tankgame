@@ -39,14 +39,16 @@ public class World extends JPanel {
             while (true) {
                 if(Bullet.bullets.size() > 0)
                 {
-                    Bullet.update();
+                    Bullet.collisions();
                     w.repaint(r);
                 }
                 //only run when there is an update to the tanks to prevent repainting when nothing changed
                 if (w.tank1.update() && w.tank2.update()) {
                     w.repaint(r);
                     //check for collisions with each WorldItem
-                    for (WorldItem worldItem : worldItems) worldItem.collisions();
+//                    for (WorldItem worldItem : worldItems) worldItem.collisions();
+                    Tank.collisions(w.tank1);
+                    Tank.collisions(w.tank2);
                 }
                 Thread.sleep(1000 / 144);
             }
@@ -66,8 +68,8 @@ public class World extends JPanel {
              */
 
             //load the tank images
-            tank1 = new Tank(600, 660, 0, 0, 0, "resources/Tank1.png");
-            tank2 = new Tank(800, 700, 0, 0, 180, "resources/Tank1.png");
+            tank1 = new Tank(600, 660, 0, 0, 0, "resources/Tank1.png", "tank1");
+            tank2 = new Tank(800, 700, 0, 0, 180, "resources/Tank1.png", "tank2");
 
             //load the background
             m = new Map("resources/Background.bmp");
@@ -138,6 +140,8 @@ public class World extends JPanel {
 
         //draw the background
         this.m.drawImage(buffer);
+
+
         if(Bullet.bullets.size() > 0) {
             for(int i = 0; i < Bullet.bullets.size(); i++){
                 Bullet.bullets.get(i).drawImage(buffer, Bullet.bullets.get(i).getX(), Bullet.bullets.get(i).getY());}

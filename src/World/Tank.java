@@ -21,17 +21,19 @@ public class Tank extends WorldItem {
     private boolean LeftPressed;
     private boolean shootPressed;
     private double timePressed = 0;
+    private String shooter;
 
     //number of starting lives
     private int lives = 3;
 
-    Tank(int x, int y, int vx, int vy, int angle, String img) throws IOException {
+    Tank(int x, int y, int vx, int vy, int angle, String img, String shooter) throws IOException {
         this.setX(x);
         this.setY(y);
         this.setAx(vx);
         this.setAy(vy);
         this.setImg(ImageIO.read(new File(img)));
         this.setA(angle);
+        this.setShooter(shooter);
 
         //check border here to make sure the initial position is valid
         checkBorder();
@@ -75,6 +77,14 @@ public class Tank extends WorldItem {
 
     void unToggleShootPressed(){
         this.shootPressed = false;
+    }
+
+    public String getShooter() {
+        return shooter;
+    }
+
+    public void setShooter(String shooter) {
+        this.shooter = shooter;
     }
 
     public boolean update() {
@@ -128,8 +138,8 @@ public class Tank extends WorldItem {
     }
 
     public boolean shootPressed() {
-        if(System.currentTimeMillis() - timePressed > 1000) {
-            Bullet.generateBullet(this.getX(), this.getY(), this.getA());
+        if(System.currentTimeMillis() - timePressed > 500) {
+            Bullet.generateBullet(this.getX(), this.getY(), this.getA(), this.getShooter());
             timePressed = System.currentTimeMillis();
         }
         return shootPressed;
@@ -211,31 +221,30 @@ public class Tank extends WorldItem {
         g2d.drawImage(getImg(), rotation, null);
     }
 
-    @Override
-    public void collisions() {
+    public static void collisions(Tank tank) {
         for (WorldItem item : World.worldItems) {
             if (item instanceof Wall) {
-                Rectangle tankRectangle = new Rectangle(this.getX(), this.getY(), this.getImg().getWidth(null), this.getImg().getHeight(null));
+                Rectangle tankRectangle = new Rectangle(tank.getX(), tank.getY(), tank.getImg().getWidth(null), tank.getImg().getHeight(null));
                 Rectangle itemRectangle = new Rectangle(item.getX(), item.getY(), item.getImg().getWidth(null), item.getImg().getHeight(null));
                 if (tankRectangle.intersects(itemRectangle)) {
                     Rectangle intersection = tankRectangle.intersection(itemRectangle);
 
                     //from bottom into something
-                    if (this.getY() >= item.getY() + item.getImg().getHeight(null) - 2) {
-                        this.setY((int) intersection.getY() + (int) intersection.getHeight());
+                    if (tank.getY() >= item.getY() + item.getImg().getHeight(null) - 2) {
+                        tank.setY((int) intersection.getY() + (int) intersection.getHeight());
                     }
                     //from top into something
-                    else if (this.getY() <= item.getY() - this.getImg().getHeight(null) + 2) {
-                        this.setY((int) intersection.getY() - this.getImg().getHeight(null));
+                    else if (tank.getY() <= item.getY() - tank.getImg().getHeight(null) + 2) {
+                        tank.setY((int) intersection.getY() - tank.getImg().getHeight(null));
                     }
                     //from right into something
-                    else if (this.getX() >= item.getX() + item.getImg().getWidth(null) - 2) {
-                        this.setX((int) intersection.getX() + (int) intersection.getWidth());
+                    else if (tank.getX() >= item.getX() + item.getImg().getWidth(null) - 2) {
+                        tank.setX((int) intersection.getX() + (int) intersection.getWidth());
 
                     }
                     //from left into something
-                    else if (this.getX() + this.getImg().getWidth(null) <= item.getX() + 2) {
-                        this.setX((int) intersection.getX() - this.getImg().getWidth(null));
+                    else if (tank.getX() + tank.getImg().getWidth(null) <= item.getX() + 2) {
+                        tank.setX((int) intersection.getX() - tank.getImg().getWidth(null));
                     }
                 }
             }
