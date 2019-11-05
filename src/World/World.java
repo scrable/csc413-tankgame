@@ -2,10 +2,12 @@ package World;
 
 import World.Powerup.Bullet;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -22,6 +24,11 @@ public class World extends JPanel {
     private Tank tank1;
     private Tank tank2;
     private Map m = null;
+    private BufferedImage p1w;
+    private BufferedImage p2w;
+    private UserInput tankInput1;
+    private UserInput tankInput2;
+    private static boolean gameover = false;
 
     //worlditems
     private UnbreakableWall ubw;
@@ -35,18 +42,16 @@ public class World extends JPanel {
         World w = new World();
         w.init();
         try {
-
-            while (true) {
-                if(Bullet.bullets.size() > 0)
-                {
+            while (!gameover) {
+                //only run if a bullet is updating or a tank is updating
+                if (Bullet.bullets.size() > 0) {
                     Bullet.collisions();
                     w.repaint(r);
                 }
-                //only run when there is an update to the tanks to prevent repainting when nothing changed
-                if (w.tank1.update() && w.tank2.update()) {
+                if (w.tank1.update() || w.tank2.update()) {
                     w.repaint(r);
-                    //check for collisions with each WorldItem
-//                    for (WorldItem worldItem : worldItems) worldItem.collisions();
+
+                    //check for collisions with each tank
                     Tank.collisions(w.tank1);
                     Tank.collisions(w.tank2);
                 }
@@ -80,12 +85,15 @@ public class World extends JPanel {
 
             life = new tankHealth("resources/Heart.png");
 
-            bullet  = new Bullet();
+            bullet = new Bullet();
             bullet.setImg("resources/Weapon.gif");
+
+            p1w = ImageIO.read(new File("resources/p1w.png"));
+            p2w = ImageIO.read(new File("resources/p2w.png"));
 
             //create the unbreakable vertical walls to be used in the middle of the map
             int innerWallHeight = ubw.getImg().getHeight(null);
-            for(int j = 400; j < SCREEN_HEIGHT - 400; j += innerWallHeight){
+            for (int j = 400; j < SCREEN_HEIGHT - 400; j += innerWallHeight) {
                 UnbreakableWall tempWallArea1 = new UnbreakableWall("resources/Wall1.gif");
                 tempWallArea1.setX(400);
                 tempWallArea1.setY(j);
@@ -108,8 +116,8 @@ public class World extends JPanel {
         }
 
         //spawn instances of keylisteners
-        UserInput tankInput1 = new UserInput(tank1, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_ENTER);
-        UserInput tankInput2 = new UserInput(tank2, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_ENTER);
+        tankInput1 = new UserInput(tank1, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_ENTER);
+        tankInput2 = new UserInput(tank2, KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_SPACE);
 
         this.jf.setLayout(new BorderLayout());
 
@@ -142,9 +150,10 @@ public class World extends JPanel {
         this.m.drawImage(buffer);
 
 
-        if(Bullet.bullets.size() > 0) {
-            for(int i = 0; i < Bullet.bullets.size(); i++){
-                Bullet.bullets.get(i).drawImage(buffer, Bullet.bullets.get(i).getX(), Bullet.bullets.get(i).getY());}
+        if (Bullet.bullets.size() > 0) {
+            for (int i = 0; i < Bullet.bullets.size(); i++) {
+                Bullet.bullets.get(i).drawImage(buffer, Bullet.bullets.get(i).getX(), Bullet.bullets.get(i).getY());
+            }
         }
 
         //get the screens for both sides
@@ -178,18 +187,37 @@ public class World extends JPanel {
 
         int placement;
         //draw tank1 lives
-        for(int i = 1; i <= this.tank1.getLives(); i++)
-        {
+        for (int i = 1; i <= this.tank1.getLives(); i++) {
             placement = (life.getImg().getWidth(null) + 10) * i;
-            life.drawImage(g2, placement/2, 10);
+            life.drawImage(g2, placement / 2, 10);
         }
         //draw tank2 lives
-        for(int i = this.tank2.getLives(); i >= 1; i--){
+        for (int i = this.tank2.getLives(); i >= 1; i--) {
             placement = (life.getImg().getWidth(null) + 10) * i;
-            life.drawImage(g2, placement/2 + SPLITSCREEN_WIDTH - 130, 10);
+            life.drawImage(g2, placement / 2 + SPLITSCREEN_WIDTH - 130, 10);
         }
 
-        g2.drawImage(mini, SPLITSCREEN_WIDTH/2 - SPLITSCREEN_WIDTH/8 + 10, SPLITSCREEN_HEIGHT - 210, 200, 200, null);
+        g2.setColor(Color.green);
+        g2.fillRect(SPLITSCREEN_WIDTH/4 - 60, 30, 2 * this.tank1.getHealth(), 30);
+        g2.fillRect(3 * SPLITSCREEN_WIDTH/4 - 140, 30, 2 * this.tank2.getHealth(), 30);
+
+        g2.drawImage(mini, SPLITSCREEN_WIDTH / 2 - SPLITSCREEN_WIDTH / 8 + 10, SPLITSCREEN_HEIGHT - 210, 200, 200, null);
+
+
+        //game over screens for each player winning
+        //remove keylisteners to prevent controlling things after game ends
+        if(this.tank1.getLives() == 0){
+            g2.drawImage(p2w, 0, 0, SPLITSCREEN_WIDTH, SPLITSCREEN_HEIGHT, null);
+            this.jf.removeKeyListener(tankInput1);
+            this.jf.removeKeyListener(tankInput2);
+            gameover = true;
+        }
+        else if(this.tank2.getLives() == 0){
+            g2.drawImage(p1w, 0, 0, SPLITSCREEN_WIDTH, SPLITSCREEN_HEIGHT, null);
+            this.jf.removeKeyListener(tankInput1);
+            this.jf.removeKeyListener(tankInput2);
+            gameover = true;
+        }
 
         //get a rectangle for repainting
         r = g.getClipBounds();

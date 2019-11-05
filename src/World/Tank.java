@@ -23,6 +23,9 @@ public class Tank extends WorldItem {
     private double timePressed = 0;
     private String shooter;
 
+    //starting HP
+    private int health = 100;
+
     //number of starting lives
     private int lives = 3;
 
@@ -85,6 +88,14 @@ public class Tank extends WorldItem {
 
     public void setShooter(String shooter) {
         this.shooter = shooter;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    public int getHealth() {
+        return health;
     }
 
     public boolean update() {

@@ -72,13 +72,23 @@ public class Bullet extends WorldItem {
                             break;
                         }
                     }
+                    //don't collide with the tank that shot the bullet
                     else if (item instanceof Tank && !(b.shooter.equals(((Tank) item).getShooter()))){
                         if (bulletRectangle.intersects(itemRectangle)) {
                             int lives = ((Tank) item).getLives();
                             bullets.remove(i);
                             if (lives > 0) {
-                                lives--;
-                                ((Tank) item).setLives(lives);
+                                int health = ((Tank) item).getHealth();
+                                health-=25;
+                                if(health != 0){
+                                    ((Tank) item).setHealth(health);
+                                }
+                                else{
+                                    lives--;
+                                    ((Tank) item).setLives(lives);
+                                    if(lives != 0)
+                                        ((Tank) item).setHealth(100);
+                                }
                             }
                             break;
                         }
