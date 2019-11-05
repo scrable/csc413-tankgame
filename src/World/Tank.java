@@ -1,11 +1,12 @@
 package World;
 
+import World.Powerup.Bullet;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class Tank extends WorldItem {
 
@@ -18,6 +19,11 @@ public class Tank extends WorldItem {
     private boolean DownPressed;
     private boolean RightPressed;
     private boolean LeftPressed;
+    private boolean shootPressed;
+    private double timePressed = 0;
+
+    //number of starting lives
+    private int lives = 3;
 
     Tank(int x, int y, int vx, int vy, int angle, String img) throws IOException {
         this.setX(x);
@@ -47,6 +53,10 @@ public class Tank extends WorldItem {
         this.LeftPressed = true;
     }
 
+    void toggleShootPressed(){
+        shootPressed = true;
+    }
+
     void unToggleUpPressed() {
         this.UpPressed = false;
     }
@@ -61,6 +71,10 @@ public class Tank extends WorldItem {
 
     void unToggleLeftPressed() {
         this.LeftPressed = false;
+    }
+
+    void unToggleShootPressed(){
+        this.shootPressed = false;
     }
 
     public boolean update() {
@@ -82,8 +96,11 @@ public class Tank extends WorldItem {
             this.rotateRight();
             check = true;
         }
+        if(this.shootPressed){
+            this.shootPressed();
+            check = true;
+        }
         return check;
-
     }
 
     private void rotateLeft() {
@@ -108,6 +125,14 @@ public class Tank extends WorldItem {
         this.setX(getX() + getAx());
         this.setY(getY() + getAy());
         checkBorder();
+    }
+
+    public boolean shootPressed() {
+        if(System.currentTimeMillis() - timePressed > 1000) {
+            Bullet.generateBullet(this.getX(), this.getY(), this.getA());
+            timePressed = System.currentTimeMillis();
+        }
+        return shootPressed;
     }
 
     private void checkBorder() {
@@ -164,6 +189,14 @@ public class Tank extends WorldItem {
         this.ty = ty;
     }
 
+    public int getLives() {
+        return lives;
+    }
+
+    public void setLives(int lives) {
+        this.lives = lives;
+    }
+
     @Override
     public String toString() {
         return "x=" + this.getX() + ", y=" + this.getY() + ", angle=" + this.getA();
@@ -180,16 +213,14 @@ public class Tank extends WorldItem {
 
     @Override
     public void collisions() {
-        ArrayList<WorldItem> itemA = World.getWorldItems();
-
-        for (WorldItem item : itemA) {
+        for (WorldItem item : World.worldItems) {
             if (item instanceof Wall) {
                 Rectangle tankRectangle = new Rectangle(this.getX(), this.getY(), this.getImg().getWidth(null), this.getImg().getHeight(null));
                 Rectangle itemRectangle = new Rectangle(item.getX(), item.getY(), item.getImg().getWidth(null), item.getImg().getHeight(null));
                 if (tankRectangle.intersects(itemRectangle)) {
                     Rectangle intersection = tankRectangle.intersection(itemRectangle);
 
-                    //from bottom in to something
+                    //from bottom into something
                     if (this.getY() >= item.getY() + item.getImg().getHeight(null) - 2) {
                         this.setY((int) intersection.getY() + (int) intersection.getHeight());
                     }
