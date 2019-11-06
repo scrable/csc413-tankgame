@@ -59,4 +59,6 @@ public abstract class WorldItem {
     }
     
     public abstract void drawImage(Graphics g, int x, int y);
+
+    public abstract void spawn();
 }

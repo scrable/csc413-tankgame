@@ -51,6 +51,11 @@ public class Bullet extends WorldItem {
         g2d.drawImage(getImg(), rotation, null);
     }
 
+    @Override
+    public void spawn() {
+
+    }
+
     public void setImg(BufferedImage image) {
         img = image;
     }

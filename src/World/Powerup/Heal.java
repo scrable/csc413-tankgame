@@ -19,4 +19,9 @@ public class Heal extends WorldItem {
     public void drawImage(Graphics g, int x, int y) {
         g.drawImage(getImg(), x, y, null);
     }
+
+    @Override
+    public void spawn() {
+
+    }
 }

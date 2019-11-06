@@ -233,6 +233,11 @@ public class Tank extends WorldItem {
         g2d.drawImage(getImg(), rotation, null);
     }
 
+    @Override
+    public void spawn() {
+
+    }
+
     public static void collisions(Tank tank) {
         for (WorldItem item : World.worldItems) {
             if (item instanceof Wall) {
