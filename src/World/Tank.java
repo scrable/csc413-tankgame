@@ -2,6 +2,7 @@ package World;
 
 import World.Powerup.Bullet;
 import World.Powerup.DoubleDamage;
+import World.Powerup.Heal;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -264,6 +265,16 @@ public class Tank extends WorldItem {
                 Rectangle itemRectangle = new Rectangle(item.getX(), item.getY(), item.getImg().getWidth(null), item.getImg().getHeight(null));
                 if (tankRectangle.intersects(itemRectangle)) {
                     tank.bulletType = "DoubleDamage";
+                    int index = World.worldItems.indexOf(item);
+                    World.itemsToRemove.add(index);
+                }
+            }
+            else if(item instanceof Heal){
+                Rectangle tankRectangle = new Rectangle(tank.getX(), tank.getY(), tank.getImg().getWidth(null), tank.getImg().getHeight(null));
+                Rectangle itemRectangle = new Rectangle(item.getX(), item.getY(), item.getImg().getWidth(null), item.getImg().getHeight(null));
+                if(tankRectangle.intersects(itemRectangle)) {
+                    tank.setHealth(100);
+                    tank.setLives(3);
                     int index = World.worldItems.indexOf(item);
                     World.itemsToRemove.add(index);
                 }

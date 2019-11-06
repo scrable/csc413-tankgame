@@ -2,6 +2,7 @@ package World;
 
 import World.Powerup.Bullet;
 import World.Powerup.DoubleDamage;
+import World.Powerup.Heal;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -13,8 +14,8 @@ import java.util.ArrayList;
 
 public class World extends JPanel {
 
-    public static final int SCREEN_WIDTH = 3200;
-    public static final int SCREEN_HEIGHT = 3200;
+    public static final int SCREEN_WIDTH = 2200;
+    public static final int SCREEN_HEIGHT = 2200;
     public static final int SPLITSCREEN_WIDTH = 900;
     public static final int SPLITSCREEN_HEIGHT = 700;
     private static Rectangle r;
@@ -36,6 +37,7 @@ public class World extends JPanel {
     private tankHealth life;
     private Bullet bullet;
     private DoubleDamage DD;
+    private Heal heal;
 
     public static ArrayList<WorldItem> worldItems = new ArrayList<WorldItem>();
     public static ArrayList<Integer> itemsToRemove = new ArrayList<>();
@@ -60,7 +62,7 @@ public class World extends JPanel {
                     Tank.collisions(w.tank1);
                     w.repaint(r);
                 }
-                if(w.tank2.update()) {
+                if (w.tank2.update()) {
                     Tank.collisions(w.tank2);
                     w.repaint(r);
                 }
@@ -75,8 +77,8 @@ public class World extends JPanel {
 
         try {
             //load the tank images
-            tank1 = new Tank(700, SCREEN_HEIGHT/2, 0, 0, 0, ImageIO.read(getClass().getResource("/resources/Tank1.png")), "tank1");
-            tank2 = new Tank(SCREEN_WIDTH-700, SCREEN_HEIGHT/2, 0, 0, 180, ImageIO.read(getClass().getResource("/resources/Tank1.png")), "tank2");
+            tank1 = new Tank(700, SCREEN_HEIGHT / 2, 0, 0, 0, ImageIO.read(getClass().getResource("/resources/Tank1.png")), "tank1");
+            tank2 = new Tank(SCREEN_WIDTH - 700, SCREEN_HEIGHT / 2, 0, 0, 180, ImageIO.read(getClass().getResource("/resources/Tank1.png")), "tank2");
 
             //load the background
             m = new Map(ImageIO.read(getClass().getResource("/resources/Background.bmp")));
@@ -86,14 +88,19 @@ public class World extends JPanel {
             bw = new BreakableWall(ImageIO.read(getClass().getResource("/resources/Wall2.gif")));
 
             //load heart icon for lives
-            life = new tankHealth(ImageIO.read(getClass().getResource("/resources/Heart.png")));
+            life = new tankHealth(ImageIO.read(getClass().getResource("/resources/Heart1.png")));
 
             //load bullet image
             bullet = new Bullet();
             bullet.setImg(ImageIO.read(getClass().getResource("/resources/Weapon.gif")));
 
+            //load the image for the double damage powerup icon and bullet
             DD = new DoubleDamage();
             DD.setImg(ImageIO.read(getClass().getResource("/resources/Pickup.gif")));
+
+            //load the image for the healing powerup icon
+            heal = new Heal();
+            heal.setImg(ImageIO.read(getClass().getResource("/resources/Heart2.png")));
 
             //load each player winning image
             p1w = ImageIO.read(getClass().getResource("/resources/p1w.png"));
@@ -116,7 +123,7 @@ public class World extends JPanel {
             }
 
             innerWallHeight = bw.getImg().getHeight(null);
-            for (int j = 1000; j < SCREEN_HEIGHT - 400; j += innerWallHeight){
+            for (int j = 1000; j < SCREEN_HEIGHT - 400; j += innerWallHeight) {
                 BreakableWall tempWallArea1 = new BreakableWall(ImageIO.read(getClass().getResource("/resources/Wall2.gif")));
                 tempWallArea1.setX(1000);
                 tempWallArea1.setY(j);
@@ -129,10 +136,17 @@ public class World extends JPanel {
                 worldItems.add(tempWallArea2);
             }
 
+            //add a double damage powerup
             DoubleDamage d = new DoubleDamage();
             d.setX(700);
             d.setY(680);
             worldItems.add(d);
+
+            //add a heal powerup
+            Heal h = new Heal();
+            h.setX(700);
+            h.setY(1000);
+            worldItems.add(h);
 
             //add the tanks to the ArrayList
             worldItems.add(tank1);
@@ -225,21 +239,20 @@ public class World extends JPanel {
         }
 
         g2.setColor(Color.green);
-        g2.fillRect(SPLITSCREEN_WIDTH/4 - 60, 30, 2 * this.tank1.getHealth(), 30);
-        g2.fillRect(3 * SPLITSCREEN_WIDTH/4 - 140, 30, 2 * this.tank2.getHealth(), 30);
+        g2.fillRect(SPLITSCREEN_WIDTH / 4 - 60, 30, 2 * this.tank1.getHealth(), 30);
+        g2.fillRect(3 * SPLITSCREEN_WIDTH / 4 - 140, 30, 2 * this.tank2.getHealth(), 30);
 
         g2.drawImage(mini, SPLITSCREEN_WIDTH / 2 - SPLITSCREEN_WIDTH / 8 + 10, SPLITSCREEN_HEIGHT - 210, 200, 200, null);
 
 
         //game over screens for each player winning
         //remove keylisteners to prevent controlling things after game ends
-        if(this.tank1.getLives() == 0){
+        if (this.tank1.getLives() == 0) {
             g2.drawImage(p2w, 0, 0, SPLITSCREEN_WIDTH, SPLITSCREEN_HEIGHT, null);
             this.jf.removeKeyListener(tankInput1);
             this.jf.removeKeyListener(tankInput2);
             gameover = true;
-        }
-        else if(this.tank2.getLives() == 0){
+        } else if (this.tank2.getLives() == 0) {
             g2.drawImage(p1w, 0, 0, SPLITSCREEN_WIDTH, SPLITSCREEN_HEIGHT, null);
             this.jf.removeKeyListener(tankInput1);
             this.jf.removeKeyListener(tankInput2);
