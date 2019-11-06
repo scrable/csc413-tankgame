@@ -75,8 +75,8 @@ public class World extends JPanel {
 
         try {
             //load the tank images
-            tank1 = new Tank(600, 660, 0, 0, 0, ImageIO.read(getClass().getResource("/resources/Tank1.png")), "tank1");
-            tank2 = new Tank(800, 700, 0, 0, 180, ImageIO.read(getClass().getResource("/resources/Tank1.png")), "tank2");
+            tank1 = new Tank(700, SCREEN_HEIGHT/2, 0, 0, 0, ImageIO.read(getClass().getResource("/resources/Tank1.png")), "tank1");
+            tank2 = new Tank(SCREEN_WIDTH-700, SCREEN_HEIGHT/2, 0, 0, 180, ImageIO.read(getClass().getResource("/resources/Tank1.png")), "tank2");
 
             //load the background
             m = new Map(ImageIO.read(getClass().getResource("/resources/Background.bmp")));
