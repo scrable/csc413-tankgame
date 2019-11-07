@@ -3,6 +3,7 @@ package World;
 import World.Powerup.Bullet;
 import World.Powerup.DoubleDamage;
 import World.Powerup.Heal;
+import World.Powerup.Speed;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -23,6 +24,7 @@ public class Tank extends WorldItem {
     private double timePressed = 0;
     private String shooter;
     private String bulletType = "bullet";
+    private boolean hasSpeedPowerup = false;
 
     //starting HP
     private int health = 100;
@@ -104,7 +106,6 @@ public class Tank extends WorldItem {
             this.moveBackwards();
             check = true;
         }
-
         if (this.LeftPressed) {
             this.rotateLeft();
             check = true;
@@ -129,18 +130,34 @@ public class Tank extends WorldItem {
     }
 
     private void moveBackwards() {
-        this.setAx((int) Math.round(R * Math.cos(Math.toRadians(this.getA()))));
-        this.setAy((int) Math.round(R * Math.sin(Math.toRadians(this.getA()))));
-        this.setX(getX() - getAx());
-        this.setY(getY() - getAy());
+        if(this.hasSpeedPowerup){
+            this.setAx((int) Math.round(R * 2 * Math.cos(Math.toRadians(this.getA()))));
+            this.setAy((int) Math.round(R * 2 * Math.sin(Math.toRadians(this.getA()))));
+            this.setX(getX() - getAx());
+            this.setY(getY() - getAy());
+        }
+        else {
+            this.setAx((int) Math.round(R * Math.cos(Math.toRadians(this.getA()))));
+            this.setAy((int) Math.round(R * Math.sin(Math.toRadians(this.getA()))));
+            this.setX(getX() - getAx());
+            this.setY(getY() - getAy());
+        }
         checkBorder();
     }
 
     private void moveForwards() {
-        this.setAx((int) Math.round(R * Math.cos(Math.toRadians(this.getA()))));
-        this.setAy((int) Math.round(R * Math.sin(Math.toRadians(this.getA()))));
-        this.setX(getX() + getAx());
-        this.setY(getY() + getAy());
+        if(this.hasSpeedPowerup){
+            this.setAx((int) Math.round(R * 2 * Math.cos(Math.toRadians(this.getA()))));
+            this.setAy((int) Math.round(R * 2 * Math.sin(Math.toRadians(this.getA()))));
+            this.setX(getX() + getAx());
+            this.setY(getY() + getAy());
+        }
+        else {
+            this.setAx((int) Math.round(R * Math.cos(Math.toRadians(this.getA()))));
+            this.setAy((int) Math.round(R * Math.sin(Math.toRadians(this.getA()))));
+            this.setX(getX() + getAx());
+            this.setY(getY() + getAy());
+        }
         checkBorder();
     }
 
@@ -213,6 +230,10 @@ public class Tank extends WorldItem {
         this.lives = lives;
     }
 
+    public void setHasSpeedPowerup(boolean b){
+        hasSpeedPowerup = b;
+    }
+
     @Override
     public void drawImage(Graphics g, int x, int y) {
         AffineTransform rotation = AffineTransform.getTranslateInstance(this.getX(), this.getY());
@@ -260,7 +281,7 @@ public class Tank extends WorldItem {
                 Rectangle itemRectangle = new Rectangle(item.getX(), item.getY(), item.getImg().getWidth(null), item.getImg().getHeight(null));
                 if (tankRectangle.intersects(itemRectangle)) {
                     tank.bulletType = "DoubleDamage";
-                    World.worldItems.remove(World.worldItems.indexOf(item));
+                    World.worldItems.remove(item);
                 }
             } else if (item instanceof Heal) {
                 Rectangle tankRectangle = new Rectangle(tank.getX(), tank.getY(), tank.getImg().getWidth(null), tank.getImg().getHeight(null));
@@ -268,7 +289,15 @@ public class Tank extends WorldItem {
                 if (tankRectangle.intersects(itemRectangle)) {
                     tank.setHealth(100);
                     tank.setLives(3);
-                    World.worldItems.remove(World.worldItems.indexOf(item));
+                    World.worldItems.remove(item);
+                }
+            }
+            else if (item instanceof Speed) {
+                Rectangle tankRectangle = new Rectangle(tank.getX(), tank.getY(), tank.getImg().getWidth(null), tank.getImg().getHeight(null));
+                Rectangle itemRectangle = new Rectangle(item.getX(), item.getY(), item.getImg().getWidth(null), item.getImg().getHeight(null));
+                if (tankRectangle.intersects(itemRectangle)) {
+                    tank.setHasSpeedPowerup(true);
+                    World.worldItems.remove(item);
                 }
             }
         }
