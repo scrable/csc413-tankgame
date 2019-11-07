@@ -114,7 +114,7 @@ public class World extends JPanel {
 
             //load the image for the speed powerup icon
             speed = new Speed();
-            speed.setImg(ImageIO.read(getClass().getResource("/resources/Heart2.png")));
+            speed.setImg(ImageIO.read(getClass().getResource("/resources/Speed.png")));
             worldItemsToSpawn.add(speed);
 
             //load each player winning image
