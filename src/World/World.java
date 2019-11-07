@@ -27,7 +27,7 @@ public class World extends JPanel {
     private JFrame jf;
     private Tank tank1;
     private Tank tank2;
-    private Map m = null;
+    private Map m;
     private UserInput tankInput1;
     private UserInput tankInput2;
 
