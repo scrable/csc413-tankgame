@@ -31,12 +31,11 @@ public class Tank extends WorldItem {
     //number of starting lives
     private int lives = 3;
 
-    Tank(int x, int y, int vx, int vy, int angle, BufferedImage img, String shooter) {
+    Tank(int x, int y, int vx, int vy, int angle, String shooter) {
         this.setX(x);
         this.setY(y);
         this.setAx(vx);
         this.setAy(vy);
-        this.setImg(img);
         this.setA(angle);
         this.setShooter(shooter);
 
@@ -236,7 +235,8 @@ public class Tank extends WorldItem {
 
     @Override
     public void spawn() {
-
+        //add the tanks to the ArrayList
+        World.worldItems.add(this);
     }
 
     public static void collisions(Tank tank) {

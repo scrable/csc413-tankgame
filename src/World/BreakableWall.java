@@ -1,12 +1,18 @@
 package World;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class BreakableWall extends Wall {
-    BreakableWall(BufferedImage img) throws IOException {
-        super(img);
+    private static Image img;
+
+    public void setImg(BufferedImage image) {
+        img = image;
+    }
+    public Image getImg() {
+        return img;
     }
 
     @Override
@@ -16,6 +22,20 @@ public class BreakableWall extends Wall {
 
     @Override
     public void spawn() {
+        int innerWallHeight = img.getHeight(null);
+        for (int j = 1000; j < World.SCREEN_HEIGHT - 400; j += innerWallHeight) {
+            BreakableWall tempWallArea1 = new BreakableWall();
+            tempWallArea1.setX(1000);
+            tempWallArea1.setY(j);
+            tempWallArea1.setImg(img);
 
+            BreakableWall tempWallArea2 = new BreakableWall();
+            tempWallArea2.setX(World.SCREEN_WIDTH - 1000);
+            tempWallArea2.setY(j);
+            tempWallArea2.setImg(img);
+
+            World.worldItems.add(tempWallArea1);
+            World.worldItems.add(tempWallArea2);
+        }
     }
 }

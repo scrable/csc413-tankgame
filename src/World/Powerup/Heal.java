@@ -22,6 +22,10 @@ public class Heal extends WorldItem {
 
     @Override
     public void spawn() {
-
+        //add a heal powerup
+        Heal h = new Heal();
+        h.setX(700);
+        h.setY(1000);
+        World.World.worldItems.add(h);
     }
 }

@@ -40,6 +40,7 @@ public class World extends JPanel {
     private Heal heal;
 
     public static ArrayList<WorldItem> worldItems = new ArrayList<WorldItem>();
+    public static ArrayList<WorldItem> worldItemsToSpawn = new ArrayList<WorldItem>();
 
     public static void main(String[] args) {
         World w = new World();
@@ -72,18 +73,29 @@ public class World extends JPanel {
 
         try {
             //load the tank images
-            tank1 = new Tank(700, SCREEN_HEIGHT / 2, 0, 0, 0, ImageIO.read(getClass().getResource("/resources/Tank1.png")), "tank1");
-            tank2 = new Tank(SCREEN_WIDTH - 700, SCREEN_HEIGHT / 2, 0, 0, 180, ImageIO.read(getClass().getResource("/resources/Tank1.png")), "tank2");
+            tank1 = new Tank(700, SCREEN_HEIGHT / 2, 0, 0, 0, "tank1");
+            tank2 = new Tank(SCREEN_WIDTH - 700, SCREEN_HEIGHT / 2, 0, 0, 180,"tank2");
+            tank1.setImg(ImageIO.read(getClass().getResource("/resources/Tank1.png")));
+            tank2.setImg(ImageIO.read(getClass().getResource("/resources/Tank1.png")));
+            worldItemsToSpawn.add(tank1);
+            worldItemsToSpawn.add(tank2);
 
             //load the background
-            m = new Map(ImageIO.read(getClass().getResource("/resources/Background.bmp")));
+            m = new Map();
+            m.setImg(ImageIO.read(getClass().getResource("/resources/Background.bmp")));
 
             //load the wall images
-            ubw = new UnbreakableWall(ImageIO.read(getClass().getResource("/resources/Wall1.gif")));
-            bw = new BreakableWall(ImageIO.read(getClass().getResource("/resources/Wall2.gif")));
+            ubw = new UnbreakableWall();
+            ubw.setImg(ImageIO.read(getClass().getResource("/resources/Wall1.gif")));
+            worldItemsToSpawn.add(ubw);
+
+            bw = new BreakableWall();
+            bw.setImg(ImageIO.read(getClass().getResource("/resources/Wall2.gif")));
+            worldItemsToSpawn.add(bw);
 
             //load heart icon for lives
-            life = new tankHealth(ImageIO.read(getClass().getResource("/resources/Heart1.png")));
+            life = new tankHealth();
+            life.setImg(ImageIO.read(getClass().getResource("/resources/Heart1.png")));
 
             //load bullet image
             bullet = new Bullet();
@@ -92,60 +104,25 @@ public class World extends JPanel {
             //load the image for the double damage powerup icon and bullet
             DD = new DoubleDamage();
             DD.setImg(ImageIO.read(getClass().getResource("/resources/Pickup.gif")));
+            worldItemsToSpawn.add(DD);
 
             //load the image for the healing powerup icon
             heal = new Heal();
             heal.setImg(ImageIO.read(getClass().getResource("/resources/Heart2.png")));
+            worldItemsToSpawn.add(heal);
 
             //load each player winning image
             p1w = ImageIO.read(getClass().getResource("/resources/p1w.png"));
             p2w = ImageIO.read(getClass().getResource("/resources/p2w.png"));
 
-            //create the unbreakable vertical walls to be used in the middle of the map
-            int innerWallHeight = ubw.getImg().getHeight(null);
-            for (int j = 400; j < SCREEN_HEIGHT - 400; j += innerWallHeight) {
-                UnbreakableWall tempWallArea1 = new UnbreakableWall(ImageIO.read(getClass().getResource("/resources/Wall1.gif")));
-                tempWallArea1.setX(400);
-                tempWallArea1.setY(j);
 
-                UnbreakableWall tempWallArea2 = new UnbreakableWall(ImageIO.read(getClass().getResource("/resources/Wall1.gif")));
-                tempWallArea2.setX(SCREEN_WIDTH - 400);
-                tempWallArea2.setY(j);
 
-                //add the walls to the worldItem ArrayList to spawn later in paintComponent
-                worldItems.add(tempWallArea1);
-                worldItems.add(tempWallArea2);
+
+
+
+            for (WorldItem worldItem : worldItemsToSpawn) {
+                worldItem.spawn();
             }
-
-            innerWallHeight = bw.getImg().getHeight(null);
-            for (int j = 1000; j < SCREEN_HEIGHT - 400; j += innerWallHeight) {
-                BreakableWall tempWallArea1 = new BreakableWall(ImageIO.read(getClass().getResource("/resources/Wall2.gif")));
-                tempWallArea1.setX(1000);
-                tempWallArea1.setY(j);
-
-                BreakableWall tempWallArea2 = new BreakableWall(ImageIO.read(getClass().getResource("/resources/Wall2.gif")));
-                tempWallArea2.setX(SCREEN_WIDTH - 1000);
-                tempWallArea2.setY(j);
-
-                worldItems.add(tempWallArea1);
-                worldItems.add(tempWallArea2);
-            }
-
-            //add a double damage powerup
-            DoubleDamage d = new DoubleDamage();
-            d.setX(700);
-            d.setY(680);
-            worldItems.add(d);
-
-            //add a heal powerup
-            Heal h = new Heal();
-            h.setX(700);
-            h.setY(1000);
-            worldItems.add(h);
-
-            //add the tanks to the ArrayList
-            worldItems.add(tank1);
-            worldItems.add(tank2);
 
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
@@ -196,21 +173,6 @@ public class World extends JPanel {
         BufferedImage left = world.getSubimage(tank1.getTx() - SPLITSCREEN_WIDTH / 4, tank1.getTy() - SPLITSCREEN_HEIGHT / 2, SPLITSCREEN_WIDTH / 2, SPLITSCREEN_HEIGHT);
         BufferedImage right = world.getSubimage(tank2.getTx() - SPLITSCREEN_WIDTH / 4, tank2.getTy() - SPLITSCREEN_HEIGHT / 2, SPLITSCREEN_WIDTH / 2, SPLITSCREEN_HEIGHT);
         BufferedImage mini = world.getSubimage(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
-        //get the height for a wall once since it is always the same to reduce function calls in for loop
-        int tempWidth = ubw.getImg().getWidth(null);
-        int tempHeight = ubw.getImg().getHeight(null);
-
-        //draw the walls bordering the top and bottom of the world
-        //these don't need to check collisions since borderchecking is already done in tank class
-        for (int i = 0; i < SCREEN_WIDTH; i += tempWidth) {
-            ubw.drawImage(buffer, i, SCREEN_HEIGHT - tempWidth);
-            ubw.drawImage(buffer, i, 0);
-        }
-        for (int i = 0; i < SCREEN_HEIGHT; i += tempHeight) {
-            ubw.drawImage(buffer, SCREEN_WIDTH - tempWidth, i);
-            ubw.drawImage(buffer, 0, i);
-        }
 
         //draw each instance of WorldItem
         for (int i = 0; i < worldItems.size(); i++) {

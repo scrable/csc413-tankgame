@@ -24,7 +24,11 @@ public class DoubleDamage extends WorldItem {
 
     @Override
     public void spawn() {
-
+        //add a double damage powerup
+        DoubleDamage d = new DoubleDamage();
+        d.setX(700);
+        d.setY(680);
+        World.World.worldItems.add(d);
     }
 
     public void setImg(BufferedImage image) {

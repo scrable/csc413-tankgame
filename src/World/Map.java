@@ -8,11 +8,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class Map extends JPanel {
-    private Image image;
-
-    Map(BufferedImage img) {
-        image = img;
-    }
+    private static Image image;
 
     @Override
     public Dimension getPreferredSize() {
@@ -31,5 +27,9 @@ public class Map extends JPanel {
                 g.drawImage(image, x, y, this);
             }
         }
+    }
+
+    public void setImg(BufferedImage img) {
+        image = img;
     }
 }
