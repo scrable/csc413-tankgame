@@ -11,6 +11,7 @@ public class Heal extends WorldItem {
     public void setImg(BufferedImage image) {
         img = image;
     }
+
     public Image getImg() {
         return img;
     }

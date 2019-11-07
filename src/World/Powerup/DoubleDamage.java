@@ -12,14 +12,18 @@ public class DoubleDamage extends WorldItem {
         return img;
     }
 
+    public void setImg(BufferedImage image) {
+        img = image;
+    }
+
     private static Image img;
 
     @Override
     public void drawImage(Graphics g, int x, int y) {
-            AffineTransform rotation = AffineTransform.getTranslateInstance(this.getX(), this.getY());
-            rotation.rotate(Math.toRadians(this.getA()), this.getImg().getWidth(null) / 2.0, this.getImg().getHeight(null) / 2.0);
-            Graphics2D g2d = (Graphics2D) g;
-            g2d.drawImage(getImg(), rotation, null);
+        AffineTransform rotation = AffineTransform.getTranslateInstance(this.getX(), this.getY());
+        rotation.rotate(Math.toRadians(this.getA()), this.getImg().getWidth(null) / 2.0, this.getImg().getHeight(null) / 2.0);
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.drawImage(getImg(), rotation, null);
     }
 
     @Override
@@ -29,9 +33,5 @@ public class DoubleDamage extends WorldItem {
         d.setX(700);
         d.setY(680);
         World.World.worldItems.add(d);
-    }
-
-    public void setImg(BufferedImage image) {
-        img = image;
     }
 }

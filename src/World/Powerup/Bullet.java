@@ -24,20 +24,17 @@ public class Bullet extends WorldItem {
     public static void generateBullet(int x, int y, int a, String s, String shooter) {
         Bullet b = new Bullet();
         b.type = s;
-        if(b.type.equals("DoubleDamage"))
-        {
+        if (b.type.equals("DoubleDamage")) {
             DoubleDamage d = new DoubleDamage();
             b.setImg(d.getImg());
             b.bulletDamage = 50;
 
-        }
-        else{
+        } else {
             b.setImg(img);
         }
         b.setX(x);
         b.setY(y);
         b.setA(a);
-
         b.setShooter(shooter);
 
         bullets.add(b);
@@ -60,7 +57,7 @@ public class Bullet extends WorldItem {
         img = image;
     }
 
-    private void setShooter(String shooter){
+    private void setShooter(String shooter) {
         this.shooter = shooter;
     }
 
@@ -89,29 +86,27 @@ public class Bullet extends WorldItem {
                             bullets.remove(i);
                             break;
                         }
-                    }
-                    else if(item instanceof BreakableWall){
-                        if(bulletRectangle.intersects(itemRectangle)){
+                    } else if (item instanceof BreakableWall) {
+                        if (bulletRectangle.intersects(itemRectangle)) {
                             bullets.remove(i);
                             World.worldItems.remove(j);
                             break;
                         }
                     }
                     //don't collide with the tank that shot the bullet
-                    else if (item instanceof Tank && !(b.shooter.equals(((Tank) item).getShooter()))){
+                    else if (item instanceof Tank && !(b.shooter.equals(((Tank) item).getShooter()))) {
                         if (bulletRectangle.intersects(itemRectangle)) {
                             int lives = ((Tank) item).getLives();
                             bullets.remove(i);
                             if (lives > 0) {
                                 int health = ((Tank) item).getHealth();
-                                health-=b.bulletDamage;
-                                if(health != 0){
+                                health -= b.bulletDamage;
+                                if (health != 0) {
                                     ((Tank) item).setHealth(health);
-                                }
-                                else{
+                                } else {
                                     lives--;
                                     ((Tank) item).setLives(lives);
-                                    if(lives != 0)
+                                    if (lives != 0)
                                         ((Tank) item).setHealth(100);
                                 }
                             }
@@ -119,9 +114,7 @@ public class Bullet extends WorldItem {
                         }
                     }
                 }
-
             }
-
         }
     }
 }

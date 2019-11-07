@@ -6,7 +6,6 @@ import World.Powerup.Heal;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class Tank extends WorldItem {
@@ -59,9 +58,7 @@ public class Tank extends WorldItem {
         this.LeftPressed = true;
     }
 
-    void toggleShootPressed(){
-        shootPressed = true;
-    }
+    void toggleShootPressed() { shootPressed = true; }
 
     void unToggleUpPressed() {
         this.UpPressed = false;
@@ -79,9 +76,7 @@ public class Tank extends WorldItem {
         this.LeftPressed = false;
     }
 
-    void unToggleShootPressed(){
-        this.shootPressed = false;
-    }
+    void unToggleShootPressed() { this.shootPressed = false; }
 
     public String getShooter() {
         return shooter;
@@ -118,7 +113,7 @@ public class Tank extends WorldItem {
             this.rotateRight();
             check = true;
         }
-        if(this.shootPressed){
+        if (this.shootPressed) {
             this.shootPressed();
             check = true;
         }
@@ -149,12 +144,11 @@ public class Tank extends WorldItem {
         checkBorder();
     }
 
-    public boolean shootPressed() {
-        if(System.currentTimeMillis() - timePressed > 500) {
+    public void shootPressed() {
+        if (System.currentTimeMillis() - timePressed > 500) {
             Bullet.generateBullet(this.getX(), this.getY(), this.getA(), this.bulletType, this.getShooter());
             timePressed = System.currentTimeMillis();
         }
-        return shootPressed;
     }
 
     private void checkBorder() {
@@ -220,16 +214,10 @@ public class Tank extends WorldItem {
     }
 
     @Override
-    public String toString() {
-        return "x=" + this.getX() + ", y=" + this.getY() + ", angle=" + this.getA();
-    }
-
-    @Override
     public void drawImage(Graphics g, int x, int y) {
         AffineTransform rotation = AffineTransform.getTranslateInstance(this.getX(), this.getY());
         rotation.rotate(Math.toRadians(this.getA()), this.getImg().getWidth(null) / 2.0, this.getImg().getHeight(null) / 2.0);
         Graphics2D g2d = (Graphics2D) g;
-
         g2d.drawImage(getImg(), rotation, null);
     }
 

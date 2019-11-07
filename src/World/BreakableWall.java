@@ -1,9 +1,7 @@
 package World;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 public class BreakableWall extends Wall {
     private static Image img;
@@ -11,6 +9,7 @@ public class BreakableWall extends Wall {
     public void setImg(BufferedImage image) {
         img = image;
     }
+
     public Image getImg() {
         return img;
     }

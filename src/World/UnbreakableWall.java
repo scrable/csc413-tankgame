@@ -1,6 +1,5 @@
 package World;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -72,7 +71,5 @@ public class UnbreakableWall extends Wall {
             World.worldItems.add(tempWallArea1);
             World.worldItems.add(tempWallArea2);
         }
-
-
     }
 }

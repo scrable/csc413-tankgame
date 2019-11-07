@@ -19,17 +19,17 @@ public class World extends JPanel {
     public static final int SPLITSCREEN_WIDTH = 900;
     public static final int SPLITSCREEN_HEIGHT = 700;
     private static Rectangle r;
+    private static boolean gameover = false;
     private BufferedImage world;
+    private BufferedImage p1w;
+    private BufferedImage p2w;
     private Graphics2D buffer;
     private JFrame jf;
     private Tank tank1;
     private Tank tank2;
     private Map m = null;
-    private BufferedImage p1w;
-    private BufferedImage p2w;
     private UserInput tankInput1;
     private UserInput tankInput2;
-    private static boolean gameover = false;
 
     //worlditems
     private UnbreakableWall ubw;
@@ -47,7 +47,6 @@ public class World extends JPanel {
         w.init();
         try {
             while (!gameover) {
-
                 //only run if a bullet is updating or a tank is updating
                 if (Bullet.bullets.size() > 0) {
                     Bullet.collisions();
@@ -74,7 +73,7 @@ public class World extends JPanel {
         try {
             //load the tank images
             tank1 = new Tank(700, SCREEN_HEIGHT / 2, 0, 0, 0, "tank1");
-            tank2 = new Tank(SCREEN_WIDTH - 700, SCREEN_HEIGHT / 2, 0, 0, 180,"tank2");
+            tank2 = new Tank(SCREEN_WIDTH - 700, SCREEN_HEIGHT / 2, 0, 0, 180, "tank2");
             tank1.setImg(ImageIO.read(getClass().getResource("/resources/Tank1.png")));
             tank2.setImg(ImageIO.read(getClass().getResource("/resources/Tank1.png")));
             worldItemsToSpawn.add(tank1);
@@ -114,11 +113,6 @@ public class World extends JPanel {
             //load each player winning image
             p1w = ImageIO.read(getClass().getResource("/resources/p1w.png"));
             p2w = ImageIO.read(getClass().getResource("/resources/p2w.png"));
-
-
-
-
-
 
             for (WorldItem worldItem : worldItemsToSpawn) {
                 worldItem.spawn();
@@ -184,22 +178,23 @@ public class World extends JPanel {
         g2.drawImage(left, 0, 0, null);
         g2.drawImage(right, SPLITSCREEN_WIDTH / 2, 0, null);
 
+        //draw each tank's lives
         int placement;
-        //draw tank1 lives
         for (int i = 1; i <= this.tank1.getLives(); i++) {
             placement = (life.getImg().getWidth(null) + 10) * i;
             life.drawImage(g2, placement / 2, 10);
         }
-        //draw tank2 lives
         for (int i = this.tank2.getLives(); i >= 1; i--) {
             placement = (life.getImg().getWidth(null) + 10) * i;
             life.drawImage(g2, placement / 2 + SPLITSCREEN_WIDTH - 130, 10);
         }
 
+        //draw healbars
         g2.setColor(Color.green);
         g2.fillRect(SPLITSCREEN_WIDTH / 4 - 60, 30, 2 * this.tank1.getHealth(), 30);
         g2.fillRect(3 * SPLITSCREEN_WIDTH / 4 - 140, 30, 2 * this.tank2.getHealth(), 30);
 
+        //draw minimap
         g2.drawImage(mini, SPLITSCREEN_WIDTH / 2 - SPLITSCREEN_WIDTH / 8 + 10, SPLITSCREEN_HEIGHT - 210, 200, 200, null);
 
 
