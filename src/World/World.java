@@ -3,7 +3,6 @@ package World;
 import World.Powerup.Bullet;
 import World.Powerup.DoubleDamage;
 import World.Powerup.Heal;
-import World.Powerup.Speed;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -39,7 +38,6 @@ public class World extends JPanel {
     private Bullet bullet;
     private DoubleDamage DD;
     private Heal heal;
-    private Speed speed;
 
     public static ArrayList<WorldItem> worldItems = new ArrayList<WorldItem>();
     public static ArrayList<WorldItem> worldItemsToSpawn = new ArrayList<WorldItem>();
@@ -111,11 +109,6 @@ public class World extends JPanel {
             heal = new Heal();
             heal.setImg(ImageIO.read(getClass().getResource("/resources/Heart2.png")));
             worldItemsToSpawn.add(heal);
-
-            //load the image for the speed powerup icon
-            speed = new Speed();
-            speed.setImg(ImageIO.read(getClass().getResource("/resources/Speed.png")));
-            worldItemsToSpawn.add(speed);
 
             //load each player winning image
             p1w = ImageIO.read(getClass().getResource("/resources/p1w.png"));

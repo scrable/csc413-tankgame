@@ -1,4 +1,4 @@
 package World.Powerup;
 
-public class Speed {
+public class Shield {
 }
