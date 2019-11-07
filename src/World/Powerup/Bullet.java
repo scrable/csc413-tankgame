@@ -93,7 +93,7 @@ public class Bullet extends WorldItem {
                     else if(item instanceof BreakableWall){
                         if(bulletRectangle.intersects(itemRectangle)){
                             bullets.remove(i);
-                            World.itemsToRemove.add(j);
+                            World.worldItems.remove(j);
                             break;
                         }
                     }

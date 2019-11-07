@@ -7,6 +7,7 @@ import World.Powerup.Heal;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public class Tank extends WorldItem {
 
@@ -239,7 +240,9 @@ public class Tank extends WorldItem {
     }
 
     public static void collisions(Tank tank) {
-        for (WorldItem item : World.worldItems) {
+        ArrayList<WorldItem> worldItems = World.worldItems;
+        for (int i = 0; i < worldItems.size(); i++) {
+            WorldItem item = worldItems.get(i);
             if (item instanceof Wall) {
                 Rectangle tankRectangle = new Rectangle(tank.getX(), tank.getY(), tank.getImg().getWidth(null), tank.getImg().getHeight(null));
                 Rectangle itemRectangle = new Rectangle(item.getX(), item.getY(), item.getImg().getWidth(null), item.getImg().getHeight(null));
@@ -264,24 +267,20 @@ public class Tank extends WorldItem {
                         tank.setX((int) intersection.getX() - tank.getImg().getWidth(null));
                     }
                 }
-            }
-            else if (item instanceof DoubleDamage){
+            } else if (item instanceof DoubleDamage) {
                 Rectangle tankRectangle = new Rectangle(tank.getX(), tank.getY(), tank.getImg().getWidth(null), tank.getImg().getHeight(null));
                 Rectangle itemRectangle = new Rectangle(item.getX(), item.getY(), item.getImg().getWidth(null), item.getImg().getHeight(null));
                 if (tankRectangle.intersects(itemRectangle)) {
                     tank.bulletType = "DoubleDamage";
-                    int index = World.worldItems.indexOf(item);
-                    World.itemsToRemove.add(index);
+                    World.worldItems.remove(World.worldItems.indexOf(item));
                 }
-            }
-            else if(item instanceof Heal){
+            } else if (item instanceof Heal) {
                 Rectangle tankRectangle = new Rectangle(tank.getX(), tank.getY(), tank.getImg().getWidth(null), tank.getImg().getHeight(null));
                 Rectangle itemRectangle = new Rectangle(item.getX(), item.getY(), item.getImg().getWidth(null), item.getImg().getHeight(null));
-                if(tankRectangle.intersects(itemRectangle)) {
+                if (tankRectangle.intersects(itemRectangle)) {
                     tank.setHealth(100);
                     tank.setLives(3);
-                    int index = World.worldItems.indexOf(item);
-                    World.itemsToRemove.add(index);
+                    World.worldItems.remove(World.worldItems.indexOf(item));
                 }
             }
         }

@@ -40,19 +40,13 @@ public class World extends JPanel {
     private Heal heal;
 
     public static ArrayList<WorldItem> worldItems = new ArrayList<WorldItem>();
-    public static ArrayList<Integer> itemsToRemove = new ArrayList<>();
 
     public static void main(String[] args) {
         World w = new World();
         w.init();
         try {
             while (!gameover) {
-                //clear items that should be deleted from worldItems before we loop through spawning worldItems to prevent concurrent modification
-                for (Integer integer : itemsToRemove) {
-                    worldItems.remove(worldItems.get(integer));
-                }
-                itemsToRemove.clear();
-                Thread.sleep(1000 / 144);
+
                 //only run if a bullet is updating or a tank is updating
                 if (Bullet.bullets.size() > 0) {
                     Bullet.collisions();
@@ -66,6 +60,7 @@ public class World extends JPanel {
                     Tank.collisions(w.tank2);
                     w.repaint(r);
                 }
+                Thread.sleep(1000 / 144);
             }
         } catch (InterruptedException ignored) {
         }
@@ -218,7 +213,8 @@ public class World extends JPanel {
         }
 
         //draw each instance of WorldItem
-        for (WorldItem worldItem : worldItems) {
+        for (int i = 0; i < worldItems.size(); i++) {
+            WorldItem worldItem = worldItems.get(i);
             worldItem.drawImage(buffer, worldItem.getX(), worldItem.getY());
         }
 
