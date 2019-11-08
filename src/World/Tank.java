@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class Tank extends WorldItem {
 
 
-    private final int R = 2;
+    private static final int R = 3;
     private final int ROTATIONSPEED = 4;
     private int tx;
     private int ty;
@@ -232,26 +232,26 @@ public class Tank extends WorldItem {
         for (int i = 0; i < worldItems.size(); i++) {
             WorldItem item = worldItems.get(i);
             if (item instanceof Wall) {
-                Rectangle tankRectangle = new Rectangle(tank.getX(), tank.getY(), tank.getImg().getWidth(null), tank.getImg().getHeight(null));
+                Rectangle tankRectangle = new Rectangle(tank.getX() + tank.getAx(), tank.getY() + tank.getAy(), tank.getImg().getWidth(null), tank.getImg().getHeight(null));
                 Rectangle itemRectangle = new Rectangle(item.getX(), item.getY(), item.getImg().getWidth(null), item.getImg().getHeight(null));
                 if (tankRectangle.intersects(itemRectangle)) {
                     Rectangle intersection = tankRectangle.intersection(itemRectangle);
 
                     //from bottom into something
-                    if (tank.getY() >= item.getY() + item.getImg().getHeight(null) - 2) {
+                    if (tank.getY() >= item.getY() + item.getImg().getHeight(null) - R) {
                         tank.setY((int) intersection.getY() + (int) intersection.getHeight());
                     }
                     //from top into something
-                    else if (tank.getY() <= item.getY() - tank.getImg().getHeight(null) + 2) {
+                    else if (tank.getY() <= item.getY() - tank.getImg().getHeight(null) + R) {
                         tank.setY((int) intersection.getY() - tank.getImg().getHeight(null));
                     }
                     //from right into something
-                    else if (tank.getX() >= item.getX() + item.getImg().getWidth(null) - 2) {
+                    else if (tank.getX() >= item.getX() + item.getImg().getWidth(null) - R) {
                         tank.setX((int) intersection.getX() + (int) intersection.getWidth());
 
                     }
                     //from left into something
-                    else if (tank.getX() + tank.getImg().getWidth(null) <= item.getX() + 2) {
+                    else if (tank.getX() + tank.getImg().getWidth(null) <= item.getX() + R) {
                         tank.setX((int) intersection.getX() - tank.getImg().getWidth(null));
                     }
                 }
