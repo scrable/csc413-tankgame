@@ -239,10 +239,28 @@ public class Tank extends WorldItem {
 
                     //from bottom into something
                     if (tank.getY() >= item.getY() + item.getImg().getHeight(null) - R) {
+                        if (tank.getX() + tank.getImg().getWidth(null) <= item.getX() + R) {
+                            tank.setX((int) intersection.getX() - tank.getImg().getWidth(null));
+                        }
+                        else if (tank.getX() >= item.getX() + item.getImg().getWidth(null) - R) {
+                            tank.setX((int) intersection.getX() + (int) intersection.getWidth());
+
+                        }
+                        else
                         tank.setY((int) intersection.getY() + (int) intersection.getHeight());
                     }
                     //from top into something
                     else if (tank.getY() <= item.getY() - tank.getImg().getHeight(null) + R) {
+                        System.out.println(tankRectangle);
+                        System.out.println(intersection);
+                        if (tank.getX() >= item.getX() + item.getImg().getWidth(null) - R) {
+                            tank.setX((int) intersection.getX() + (int) intersection.getWidth());
+
+                        }
+                        else if (tank.getX() + tank.getImg().getWidth(null) <= item.getX() + R) {
+                            tank.setX((int) intersection.getX() - tank.getImg().getWidth(null));
+                        }
+                        else
                         tank.setY((int) intersection.getY() - tank.getImg().getHeight(null));
                     }
                     //from right into something
@@ -260,7 +278,7 @@ public class Tank extends WorldItem {
                 Rectangle itemRectangle = new Rectangle(item.getX(), item.getY(), item.getImg().getWidth(null), item.getImg().getHeight(null));
                 if (tankRectangle.intersects(itemRectangle)) {
                     tank.bulletType = "DoubleDamage";
-                    World.worldItems.remove(World.worldItems.indexOf(item));
+                    World.worldItems.remove(item);
                 }
             } else if (item instanceof Heal) {
                 Rectangle tankRectangle = new Rectangle(tank.getX(), tank.getY(), tank.getImg().getWidth(null), tank.getImg().getHeight(null));
@@ -268,7 +286,7 @@ public class Tank extends WorldItem {
                 if (tankRectangle.intersects(itemRectangle)) {
                     tank.setHealth(100);
                     tank.setLives(3);
-                    World.worldItems.remove(World.worldItems.indexOf(item));
+                    World.worldItems.remove(item);
                 }
             }
         }

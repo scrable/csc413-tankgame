@@ -20,6 +20,8 @@ public class DoubleDamage extends WorldItem {
 
     @Override
     public void drawImage(Graphics g, int x, int y) {
+        //we need rotation since the same image for the powerup
+        //is used to replace the default bullet image
         AffineTransform rotation = AffineTransform.getTranslateInstance(this.getX(), this.getY());
         rotation.rotate(Math.toRadians(this.getA()), this.getImg().getWidth(null) / 2.0, this.getImg().getHeight(null) / 2.0);
         Graphics2D g2d = (Graphics2D) g;
