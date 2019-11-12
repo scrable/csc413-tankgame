@@ -82,7 +82,7 @@ public class Tank extends WorldItem {
         return shooter;
     }
 
-    public void setShooter(String shooter) {
+    private void setShooter(String shooter) {
         this.shooter = shooter;
     }
 
@@ -94,7 +94,7 @@ public class Tank extends WorldItem {
         return health;
     }
 
-    public boolean update() {
+    boolean update() {
         boolean check = false;
         if (this.UpPressed) {
             this.moveForwards();
@@ -144,7 +144,7 @@ public class Tank extends WorldItem {
         checkBorder();
     }
 
-    public void shootPressed() {
+    private void shootPressed() {
         if (System.currentTimeMillis() - timePressed > 500) {
             Bullet.generateBullet(this.getX(), this.getY(), this.getA(), this.bulletType, this.getShooter());
             timePressed = System.currentTimeMillis();
@@ -167,7 +167,7 @@ public class Tank extends WorldItem {
         checkScreenEdge();
     }
 
-    public void checkScreenEdge() {
+    private void checkScreenEdge() {
         this.tx = this.getX();
         this.ty = this.getY();
 
@@ -189,19 +189,19 @@ public class Tank extends WorldItem {
         }
     }
 
-    public int getTx() {
+    int getTx() {
         return tx;
     }
 
-    public void setTx(int tx) {
+    private void setTx(int tx) {
         this.tx = tx;
     }
 
-    public int getTy() {
+    int getTy() {
         return ty;
     }
 
-    public void setTy(int ty) {
+    private void setTy(int ty) {
         this.ty = ty;
     }
 
@@ -227,7 +227,7 @@ public class Tank extends WorldItem {
         World.worldItems.add(this);
     }
 
-    public static void collisions(Tank tank) {
+    static void collisions(Tank tank) {
         ArrayList<WorldItem> worldItems = World.worldItems;
         for (int i = 0; i < worldItems.size(); i++) {
             WorldItem item = worldItems.get(i);
@@ -251,8 +251,6 @@ public class Tank extends WorldItem {
                     }
                     //from top into something
                     else if (tank.getY() <= item.getY() - tank.getImg().getHeight(null) + R) {
-                        System.out.println(tankRectangle);
-                        System.out.println(intersection);
                         if (tank.getX() >= item.getX() + item.getImg().getWidth(null) - R) {
                             tank.setX((int) intersection.getX() + (int) intersection.getWidth());
 

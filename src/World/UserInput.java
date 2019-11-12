@@ -11,7 +11,7 @@ public class UserInput implements KeyListener {
     private final int left;
     private final int shoot;
 
-    public UserInput(Tank tank, int up, int down, int left, int right, int shoot) {
+    UserInput(Tank tank, int up, int down, int left, int right, int shoot) {
         this.tank = tank;
         this.up = up;
         this.down = down;

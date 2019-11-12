@@ -1,3 +1,3 @@
 package World;
 
-public abstract class Wall extends WorldItem{}
+abstract class Wall extends WorldItem{}

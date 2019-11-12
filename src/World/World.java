@@ -40,7 +40,7 @@ public class World extends JPanel {
     private Heal heal;
 
     public static ArrayList<WorldItem> worldItems = new ArrayList<WorldItem>();
-    public static ArrayList<WorldItem> worldItemsToSpawn = new ArrayList<WorldItem>();
+    private static ArrayList<WorldItem> worldItemsToSpawn = new ArrayList<WorldItem>();
 
     public static void main(String[] args) {
         World w = new World();

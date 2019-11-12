@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 public class tankHealth {
     private Image image;
 
-    public Image getImg() {
+    Image getImg() {
         return image;
     }
 
@@ -14,7 +14,7 @@ public class tankHealth {
         g.drawImage(getImg(), x, y, null);
     }
 
-    public void setImg(BufferedImage img) {
+    void setImg(BufferedImage img) {
         image = img;
     }
 }

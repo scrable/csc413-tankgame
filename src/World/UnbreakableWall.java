@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 public class UnbreakableWall extends Wall {
     private static Image img;
 
-    public void setImg(BufferedImage image) {
+    void setImg(BufferedImage image) {
         img = image;
     }
     public Image getImg() {
