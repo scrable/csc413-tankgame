@@ -22,7 +22,7 @@ public class BreakableWall extends Wall {
     @Override
     public void spawn() {
         int innerWallHeight = img.getHeight(null);
-        for (int j = 1000; j < World.SCREEN_HEIGHT - 400; j += innerWallHeight) {
+        for (int j = 400; j < World.SCREEN_HEIGHT - 400; j += innerWallHeight) {
             BreakableWall tempWallArea1 = new BreakableWall();
             tempWallArea1.setX(1000);
             tempWallArea1.setY(j);

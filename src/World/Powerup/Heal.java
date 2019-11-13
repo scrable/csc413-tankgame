@@ -25,8 +25,12 @@ public class Heal extends WorldItem {
     public void spawn() {
         //add a heal powerup
         Heal h = new Heal();
-        h.setX(700);
-        h.setY(1000);
+        h.setX(100);
+        h.setY(World.World.SCREEN_HEIGHT - 200);
+        World.World.worldItems.add(h);
+        h = new Heal();
+        h.setX(World.World.SCREEN_WIDTH - 200);
+        h.setY(100);
         World.World.worldItems.add(h);
     }
 }

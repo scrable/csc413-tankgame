@@ -12,7 +12,7 @@ public class Tank extends WorldItem {
 
 
     private static final int R = 3;
-    private final int ROTATIONSPEED = 4;
+    private final int ROTATIONSPEED = 3;
     private int tx;
     private int ty;
     private boolean UpPressed;
