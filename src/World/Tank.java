@@ -146,7 +146,7 @@ public class Tank extends WorldItem {
 
     private void shootPressed() {
         if (System.currentTimeMillis() - timePressed > 500) {
-            Bullet.generateBullet(this.getX(), this.getY(), this.getA(), this.bulletType, this.getShooter());
+            Bullet.generateBullet(this.getX() + this.getImg().getWidth(null)/2, this.getY() + this.getImg().getHeight(null)/2, this.getA(), this.bulletType, this.getShooter());
             timePressed = System.currentTimeMillis();
         }
     }
