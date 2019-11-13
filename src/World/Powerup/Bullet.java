@@ -32,8 +32,8 @@ public class Bullet extends WorldItem {
         } else {
             b.setImg(img);
         }
-        b.setX(x- img.getWidth(null)/2);
-        b.setY(y-img.getHeight(null)/2);
+        b.setX(x- b.getImg().getWidth(null)/2);
+        b.setY(y-b.getImg().getHeight(null)/2);
         b.setA(a);
         b.setShooter(shooter);
 
