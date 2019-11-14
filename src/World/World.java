@@ -199,16 +199,11 @@ public class World extends JPanel {
 
 
         //game over screens for each player winning
-        //remove keylisteners to prevent controlling things after game ends
         if (this.tank1.getLives() == 0) {
             g2.drawImage(p2w, 0, 0, SPLITSCREEN_WIDTH, SPLITSCREEN_HEIGHT, null);
-            this.jf.removeKeyListener(tankInput1);
-            this.jf.removeKeyListener(tankInput2);
             gameover = true;
         } else if (this.tank2.getLives() == 0) {
             g2.drawImage(p1w, 0, 0, SPLITSCREEN_WIDTH, SPLITSCREEN_HEIGHT, null);
-            this.jf.removeKeyListener(tankInput1);
-            this.jf.removeKeyListener(tankInput2);
             gameover = true;
         }
 
