@@ -8,6 +8,8 @@ import java.awt.image.BufferedImage;
 public class DoubleDamage extends WorldItem
 {
 
+    private static Image img;
+
     public Image getImg()
     {
         return img;
@@ -17,8 +19,6 @@ public class DoubleDamage extends WorldItem
     {
         img = image;
     }
-
-    private static Image img;
 
     @Override
     public void spawn()

@@ -14,19 +14,19 @@ import java.util.ArrayList;
 
 public class World extends JPanel
 {
-
     public static final int SCREEN_WIDTH = 2200,
             SCREEN_HEIGHT = 2200,
             SPLITSCREEN_WIDTH = 900,
             SPLITSCREEN_HEIGHT = 700;
+    public static ArrayList<WorldItem> worldItems = new ArrayList<WorldItem>();
     private static boolean gameover = false;
+    private static ArrayList<WorldItem> worldItemsToSpawn = new ArrayList<WorldItem>();
     private BufferedImage world,
             p1w,
             p2w;
     private Graphics2D buffer;
     private Tank tank1, tank2;
     private Map m;
-
     //worlditems
     private UnbreakableWall ubw;
     private BreakableWall bw;
@@ -34,9 +34,6 @@ public class World extends JPanel
     private Bullet bullet;
     private DoubleDamage DD;
     private Heal heal;
-
-    public static ArrayList<WorldItem> worldItems = new ArrayList<WorldItem>();
-    private static ArrayList<WorldItem> worldItemsToSpawn = new ArrayList<WorldItem>();
 
     public static void main(String[] args)
     {

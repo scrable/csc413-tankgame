@@ -5,12 +5,12 @@ import java.awt.event.KeyListener;
 
 public class UserInput implements KeyListener
 {
-    private Tank tank;
     private final int up;
     private final int down;
     private final int right;
     private final int left;
     private final int shoot;
+    private Tank tank;
 
     UserInput(Tank tank, int up, int down, int left, int right, int shoot)
     {

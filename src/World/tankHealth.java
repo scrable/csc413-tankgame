@@ -12,13 +12,13 @@ public class tankHealth
         return image;
     }
 
-    public void drawImage(Graphics g, int x, int y)
-    {
-        g.drawImage(getImg(), x, y, null);
-    }
-
     void setImg(BufferedImage img)
     {
         image = img;
+    }
+
+    public void drawImage(Graphics g, int x, int y)
+    {
+        g.drawImage(getImg(), x, y, null);
     }
 }

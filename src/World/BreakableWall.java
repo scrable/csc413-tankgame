@@ -7,14 +7,14 @@ public class BreakableWall extends Wall
 {
     private static Image img;
 
-    void setImg(BufferedImage image)
-    {
-        img = image;
-    }
-
     public Image getImg()
     {
         return img;
+    }
+
+    void setImg(BufferedImage image)
+    {
+        img = image;
     }
 
     @Override

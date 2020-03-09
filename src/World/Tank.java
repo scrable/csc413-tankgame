@@ -42,6 +42,87 @@ public class Tank extends WorldItem
         checkBorder();
     }
 
+    static void collisions(Tank tank)
+    {
+        ArrayList<WorldItem> worldItems = World.worldItems;
+        for (int i = 0; i < worldItems.size(); i++)
+        {
+            WorldItem item = worldItems.get(i);
+            if (item instanceof Wall)
+            {
+                Rectangle tankRectangle = new Rectangle(tank.getX() + tank.getAx(), tank.getY() + tank.getAy(), tank.getImg().getWidth(null), tank.getImg().getHeight(null));
+                Rectangle itemRectangle = new Rectangle(item.getX(), item.getY(), item.getImg().getWidth(null), item.getImg().getHeight(null));
+                if (tankRectangle.intersects(itemRectangle))
+                {
+                    Rectangle intersection = tankRectangle.intersection(itemRectangle);
+
+                    //from bottom into something
+                    if (tank.getY() >= item.getY() + item.getImg().getHeight(null) - R)
+                    {
+                        if (tank.getX() + tank.getImg().getWidth(null) <= item.getX() + R)
+                        {
+                            tank.setX((int) intersection.getX() - tank.getImg().getWidth(null));
+                        }
+                        else if (tank.getX() >= item.getX() + item.getImg().getWidth(null) - R)
+                        {
+                            tank.setX((int) intersection.getX() + (int) intersection.getWidth());
+
+                        }
+                        else
+                            tank.setY((int) intersection.getY() + (int) intersection.getHeight());
+                    }
+                    //from top into something
+                    else if (tank.getY() <= item.getY() - tank.getImg().getHeight(null) + R)
+                    {
+                        if (tank.getX() >= item.getX() + item.getImg().getWidth(null) - R)
+                        {
+                            tank.setX((int) intersection.getX() + (int) intersection.getWidth());
+
+                        }
+                        else if (tank.getX() + tank.getImg().getWidth(null) <= item.getX() + R)
+                        {
+                            tank.setX((int) intersection.getX() - tank.getImg().getWidth(null));
+                        }
+                        else
+                            tank.setY((int) intersection.getY() - tank.getImg().getHeight(null));
+                    }
+                    //from right into something
+                    else if (tank.getX() >= item.getX() + item.getImg().getWidth(null) - R)
+                    {
+                        tank.setX((int) intersection.getX() + (int) intersection.getWidth());
+
+                    }
+                    //from left into something
+                    else if (tank.getX() + tank.getImg().getWidth(null) <= item.getX() + R)
+                    {
+                        tank.setX((int) intersection.getX() - tank.getImg().getWidth(null));
+                    }
+                }
+            }
+            else if (item instanceof DoubleDamage)
+            {
+                Rectangle tankRectangle = new Rectangle(tank.getX(), tank.getY(), tank.getImg().getWidth(null), tank.getImg().getHeight(null));
+                Rectangle itemRectangle = new Rectangle(item.getX(), item.getY(), item.getImg().getWidth(null), item.getImg().getHeight(null));
+                if (tankRectangle.intersects(itemRectangle))
+                {
+                    tank.bulletType = "DoubleDamage";
+                    World.worldItems.remove(item);
+                }
+            }
+            else if (item instanceof Heal)
+            {
+                Rectangle tankRectangle = new Rectangle(tank.getX(), tank.getY(), tank.getImg().getWidth(null), tank.getImg().getHeight(null));
+                Rectangle itemRectangle = new Rectangle(item.getX(), item.getY(), item.getImg().getWidth(null), item.getImg().getHeight(null));
+                if (tankRectangle.intersects(itemRectangle))
+                {
+                    tank.setHealth(100);
+                    tank.setLives(3);
+                    World.worldItems.remove(item);
+                }
+            }
+        }
+    }
+
     void toggleUpPressed()
     {
         this.UpPressed = true;
@@ -102,14 +183,14 @@ public class Tank extends WorldItem
         this.shooter = shooter;
     }
 
-    public void setHealth(int health)
-    {
-        this.health = health;
-    }
-
     public int getHealth()
     {
         return health;
+    }
+
+    public void setHealth(int health)
+    {
+        this.health = health;
     }
 
     boolean update()
@@ -264,86 +345,5 @@ public class Tank extends WorldItem
     {
         //add the tanks to the ArrayList
         World.worldItems.add(this);
-    }
-
-    static void collisions(Tank tank)
-    {
-        ArrayList<WorldItem> worldItems = World.worldItems;
-        for (int i = 0; i < worldItems.size(); i++)
-        {
-            WorldItem item = worldItems.get(i);
-            if (item instanceof Wall)
-            {
-                Rectangle tankRectangle = new Rectangle(tank.getX() + tank.getAx(), tank.getY() + tank.getAy(), tank.getImg().getWidth(null), tank.getImg().getHeight(null));
-                Rectangle itemRectangle = new Rectangle(item.getX(), item.getY(), item.getImg().getWidth(null), item.getImg().getHeight(null));
-                if (tankRectangle.intersects(itemRectangle))
-                {
-                    Rectangle intersection = tankRectangle.intersection(itemRectangle);
-
-                    //from bottom into something
-                    if (tank.getY() >= item.getY() + item.getImg().getHeight(null) - R)
-                    {
-                        if (tank.getX() + tank.getImg().getWidth(null) <= item.getX() + R)
-                        {
-                            tank.setX((int) intersection.getX() - tank.getImg().getWidth(null));
-                        }
-                        else if (tank.getX() >= item.getX() + item.getImg().getWidth(null) - R)
-                        {
-                            tank.setX((int) intersection.getX() + (int) intersection.getWidth());
-
-                        }
-                        else
-                            tank.setY((int) intersection.getY() + (int) intersection.getHeight());
-                    }
-                    //from top into something
-                    else if (tank.getY() <= item.getY() - tank.getImg().getHeight(null) + R)
-                    {
-                        if (tank.getX() >= item.getX() + item.getImg().getWidth(null) - R)
-                        {
-                            tank.setX((int) intersection.getX() + (int) intersection.getWidth());
-
-                        }
-                        else if (tank.getX() + tank.getImg().getWidth(null) <= item.getX() + R)
-                        {
-                            tank.setX((int) intersection.getX() - tank.getImg().getWidth(null));
-                        }
-                        else
-                            tank.setY((int) intersection.getY() - tank.getImg().getHeight(null));
-                    }
-                    //from right into something
-                    else if (tank.getX() >= item.getX() + item.getImg().getWidth(null) - R)
-                    {
-                        tank.setX((int) intersection.getX() + (int) intersection.getWidth());
-
-                    }
-                    //from left into something
-                    else if (tank.getX() + tank.getImg().getWidth(null) <= item.getX() + R)
-                    {
-                        tank.setX((int) intersection.getX() - tank.getImg().getWidth(null));
-                    }
-                }
-            }
-            else if (item instanceof DoubleDamage)
-            {
-                Rectangle tankRectangle = new Rectangle(tank.getX(), tank.getY(), tank.getImg().getWidth(null), tank.getImg().getHeight(null));
-                Rectangle itemRectangle = new Rectangle(item.getX(), item.getY(), item.getImg().getWidth(null), item.getImg().getHeight(null));
-                if (tankRectangle.intersects(itemRectangle))
-                {
-                    tank.bulletType = "DoubleDamage";
-                    World.worldItems.remove(item);
-                }
-            }
-            else if (item instanceof Heal)
-            {
-                Rectangle tankRectangle = new Rectangle(tank.getX(), tank.getY(), tank.getImg().getWidth(null), tank.getImg().getHeight(null));
-                Rectangle itemRectangle = new Rectangle(item.getX(), item.getY(), item.getImg().getWidth(null), item.getImg().getHeight(null));
-                if (tankRectangle.intersects(itemRectangle))
-                {
-                    tank.setHealth(100);
-                    tank.setLives(3);
-                    World.worldItems.remove(item);
-                }
-            }
-        }
     }
 }

@@ -9,14 +9,14 @@ public class Heal extends WorldItem
 {
     private static Image img;
 
-    public void setImg(BufferedImage image)
-    {
-        img = image;
-    }
-
     public Image getImg()
     {
         return img;
+    }
+
+    public void setImg(BufferedImage image)
+    {
+        img = image;
     }
 
     @Override

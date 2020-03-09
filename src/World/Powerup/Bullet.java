@@ -8,14 +8,12 @@ import java.util.ArrayList;
 
 public class Bullet extends WorldItem
 {
+    public static ArrayList<Bullet> bullets = new ArrayList<>();
     private static Image img;
     private String shooter;
     private String type;
-
     private int bulletSpeed = 5;
     private int bulletDamage = 25;
-
-    public static ArrayList<Bullet> bullets = new ArrayList<>();
 
     public static void generateBullet(int x, int y, int a, String s, String shooter)
     {
@@ -38,22 +36,6 @@ public class Bullet extends WorldItem
         b.setShooter(shooter);
 
         bullets.add(b);
-    }
-
-    @Override
-    public void spawn()
-    {
-
-    }
-
-    public void setImg(BufferedImage image)
-    {
-        img = image;
-    }
-
-    private void setShooter(String shooter)
-    {
-        this.shooter = shooter;
     }
 
     public static void collisions()
@@ -134,5 +116,21 @@ public class Bullet extends WorldItem
                 }
             }
         }
+    }
+
+    @Override
+    public void spawn()
+    {
+
+    }
+
+    public void setImg(BufferedImage image)
+    {
+        img = image;
+    }
+
+    private void setShooter(String shooter)
+    {
+        this.shooter = shooter;
     }
 }
