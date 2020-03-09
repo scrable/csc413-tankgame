@@ -3,7 +3,8 @@ package World;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class UserInput implements KeyListener {
+public class UserInput implements KeyListener
+{
     private Tank tank;
     private final int up;
     private final int down;
@@ -11,7 +12,8 @@ public class UserInput implements KeyListener {
     private final int left;
     private final int shoot;
 
-    UserInput(Tank tank, int up, int down, int left, int right, int shoot) {
+    UserInput(Tank tank, int up, int down, int left, int right, int shoot)
+    {
         this.tank = tank;
         this.up = up;
         this.down = down;
@@ -21,46 +23,59 @@ public class UserInput implements KeyListener {
     }
 
     @Override
-    public void keyTyped(KeyEvent ke) {
+    public void keyTyped(KeyEvent ke)
+    {
 
     }
 
     @Override
-    public void keyPressed(KeyEvent ke) {
+    public void keyPressed(KeyEvent ke)
+    {
         int keyPressed = ke.getKeyCode();
-        if (keyPressed == up) {
+        if (keyPressed == up)
+        {
             this.tank.toggleUpPressed();
         }
-        if (keyPressed == down) {
+        if (keyPressed == down)
+        {
             this.tank.toggleDownPressed();
         }
-        if (keyPressed == left) {
+        if (keyPressed == left)
+        {
             this.tank.toggleLeftPressed();
         }
-        if (keyPressed == right) {
+        if (keyPressed == right)
+        {
             this.tank.toggleRightPressed();
         }
-        if (keyPressed == shoot) {
+        if (keyPressed == shoot)
+        {
             this.tank.toggleShootPressed();
         }
     }
 
     @Override
-    public void keyReleased(KeyEvent ke) {
+    public void keyReleased(KeyEvent ke)
+    {
         int keyReleased = ke.getKeyCode();
-        if (keyReleased == up) {
+        if (keyReleased == up)
+        {
             this.tank.unToggleUpPressed();
         }
-        if (keyReleased == down) {
+        if (keyReleased == down)
+        {
             this.tank.unToggleDownPressed();
         }
-        if (keyReleased == left) {
+        if (keyReleased == left)
+        {
             this.tank.unToggleLeftPressed();
         }
-        if (keyReleased == right) {
+        if (keyReleased == right)
+        {
             this.tank.unToggleRightPressed();
         }
-        if (keyReleased == shoot) {
+        if (keyReleased == shoot)
+        {
             this.tank.unToggleShootPressed();
         }
     }
