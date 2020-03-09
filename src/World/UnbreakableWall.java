@@ -3,26 +3,33 @@ package World;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class UnbreakableWall extends Wall {
+public class UnbreakableWall extends Wall
+{
     private static Image img;
 
-    void setImg(BufferedImage image) {
+    void setImg(BufferedImage image)
+    {
         img = image;
     }
-    public Image getImg() {
+
+    public Image getImg()
+    {
         return img;
     }
 
     @Override
-    public void drawImage(Graphics g, int x, int y) {
+    public void drawImage(Graphics g, int x, int y)
+    {
         g.drawImage(getImg(), x, y, null);
     }
 
     @Override
-    public void spawn() {
+    public void spawn()
+    {
         //create the unbreakable vertical walls to be used in the middle of the map
         int innerWallHeight = img.getHeight(null);
-        for (int j = 400; j < World.SCREEN_HEIGHT - 400; j += innerWallHeight) {
+        for (int j = 400; j < World.SCREEN_HEIGHT - 400; j += innerWallHeight)
+        {
             UnbreakableWall tempWallArea1 = new UnbreakableWall();
             tempWallArea1.setX(400);
             tempWallArea1.setY(j);
@@ -43,7 +50,8 @@ public class UnbreakableWall extends Wall {
         int tempHeight = img.getHeight(null);
 
         //draw the walls bordering the world
-        for (int i = 0; i < World.SCREEN_WIDTH; i += tempWidth) {
+        for (int i = 0; i < World.SCREEN_WIDTH; i += tempWidth)
+        {
             UnbreakableWall tempWallArea1 = new UnbreakableWall();
             tempWallArea1.setX(i);
             tempWallArea1.setY(World.SCREEN_HEIGHT - tempWidth);
@@ -57,7 +65,8 @@ public class UnbreakableWall extends Wall {
             World.worldItems.add(tempWallArea1);
             World.worldItems.add(tempWallArea2);
         }
-        for (int i = 0; i < World.SCREEN_HEIGHT; i += tempHeight) {
+        for (int i = 0; i < World.SCREEN_HEIGHT; i += tempHeight)
+        {
             UnbreakableWall tempWallArea1 = new UnbreakableWall();
             tempWallArea1.setX(World.SCREEN_WIDTH - tempWidth);
             tempWallArea1.setY(i);
